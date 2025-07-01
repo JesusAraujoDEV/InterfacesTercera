@@ -43,10 +43,10 @@ export default function UserDetails({ user }) {
             <div className="flex items-center mt-2 space-x-2">
               <span
                 className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                  user.isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                  user.status === 'active' ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
                 }`}
               >
-                {user.isActive ? "Activo" : "Inactivo"}
+                {user.status === 'active' ? "Activo" : "Inactivo"}
               </span>
               <span className="text-xs text-gray-500">ID: {user.id}</span>
             </div>

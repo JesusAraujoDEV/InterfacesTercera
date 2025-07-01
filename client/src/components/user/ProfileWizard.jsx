@@ -4,7 +4,7 @@ import HealthIcon from "../../assets/icons/run1.svg"
 import WorkIcon from "../../assets/icons/work1.svg"
 import LocationIcon from "../../assets/icons/location.svg"
 
-export default function ProfileWizard({ user, onSave, onCancel }) {
+export default function ProfileWizard({ user, onCancel }) {
   const [currentStep, setCurrentStep] = useState(1)
   const [formData, setFormData] = useState({
     firstName: user?.firstName || "",
@@ -68,11 +68,12 @@ export default function ProfileWizard({ user, onSave, onCancel }) {
 
     switch (step) {
       case 1:
-        if (!formData.firstName.trim()) newErrors.firstName = "El nombre es requerido"
-        if (!formData.lastName.trim()) newErrors.lastName = "El apellido es requerido"
+        if (!formData.firstName.trim() || formData.firstName.length < 2 || formData.firstName.length > 50) newErrors.firstName = "El nombre es requerido (2-50 caracteres)"
+        if (!formData.lastName.trim() || formData.lastName.length < 2 || formData.lastName.length > 50) newErrors.lastName = "El apellido es requerido (2-50 caracteres)"
         if (!formData.email.trim()) newErrors.email = "El email es requerido"
-        else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "Email inválido"
+        else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(formData.email)) newErrors.email = "Email inválido"
         if (!formData.phone.trim()) newErrors.phone = "El teléfono es requerido"
+        else if (!/^\+\d{7,15}$/.test(formData.phone.replace(/\s/g, ''))) newErrors.phone = "El teléfono debe tener formato internacional, ej: +584144019911"
         break
 
       case 2:
@@ -81,17 +82,15 @@ export default function ProfileWizard({ user, onSave, onCancel }) {
           const birthDate = new Date(formData.birthDate)
           const today = new Date()
           const age = today.getFullYear() - birthDate.getFullYear()
-          if (age < 18 || age > 100) newErrors.birthDate = "La edad debe estar entre 18 y 100 años"
+          if (age < 0 || age > 150) newErrors.birthDate = "La edad debe estar entre 0 y 150 años"
         }
         if (!formData.gender) newErrors.gender = "El género es requerido"
-        if (!formData.height || formData.height < 100 || formData.height > 250)
-          newErrors.height = "La altura debe estar entre 100 y 250 cm"
-        if (!formData.weight || formData.weight < 30 || formData.weight > 300)
-          newErrors.weight = "El peso debe estar entre 30 y 300 kg"
+        if (!formData.height || Number(formData.height) <= 0) newErrors.height = "La altura debe ser un número positivo"
+        if (!formData.weight || Number(formData.weight) <= 0) newErrors.weight = "El peso debe ser un número positivo"
         break
 
       case 3:
-        if (!formData.university.trim()) newErrors.university = "La universidad es requerida"
+        if (formData.university && formData.university.length < 3) newErrors.university = "La universidad debe tener al menos 3 caracteres"
         break
 
       case 4:
@@ -102,7 +101,15 @@ export default function ProfileWizard({ user, onSave, onCancel }) {
         break
     }
 
+    // Validación global para image si está presente
+    if (formData.image && !/^https?:\/\//.test(formData.image)) {
+      newErrors.image = "La imagen debe ser una URL válida (http o https)"
+    }
+
     setErrors(newErrors)
+    if (Object.keys(newErrors).length > 0) {
+      alert(Object.values(newErrors).join('\n'))
+    }
     return Object.keys(newErrors).length === 0
   }
 
@@ -162,32 +169,132 @@ export default function ProfileWizard({ user, onSave, onCancel }) {
     setCurrentStep((prev) => Math.max(prev - 1, 1))
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (validateStep(currentStep)) {
-      // Estructurar los datos como en dummyjson
-      const updatedUser = {
-        ...user,
-        ...formData,
-        address: {
-          address: formData.address,
-          city: formData.city,
-          state: formData.state,
-          postalCode: formData.postalCode,
-          coordinates: {
-            lat: Number.parseFloat(formData.coordinates.lat) || 0,
-            lng: Number.parseFloat(formData.coordinates.lng) || 0,
-          },
-        },
-        company: {
-          name: formData.company,
-          department: formData.department,
-          title: formData.title,
-        },
-        hair: {
-          color: formData.hairColor,
-        },
+      // Limpiar el objeto para no enviar campos vacíos ni strings vacíos y solo los permitidos
+      const allowedFields = [
+        'email', 'password', 'username', 'firstName', 'lastName', 'maidenName', 'age', 'gender', 'phone', 'birthDate', 'image', 'bloodGroup', 'height', 'weight', 'eyeColor', 'ip', 'macAddress', 'university', 'ein', 'ssn', 'userAgent',
+        'hair', 'address', 'bank', 'company', 'crypto'
+      ];
+      function cleanObject(obj) {
+        if (obj === null || obj === undefined) return undefined;
+        if (typeof obj === 'string' && obj.trim() === '') return undefined;
+        if (typeof obj === 'object' && !Array.isArray(obj)) {
+          const cleaned = {};
+          Object.entries(obj).forEach(([key, value]) => {
+            if (allowedFields.includes(key) || typeof value === 'object') {
+              const cleanedValue = cleanObject(value);
+              if (cleanedValue !== undefined) cleaned[key] = cleanedValue;
+            }
+          });
+          return Object.keys(cleaned).length > 0 ? cleaned : undefined;
+        }
+        return obj;
       }
-      onSave(updatedUser)
+
+      // Validar y transformar phone
+      let phone = formData.phone || user.phone || undefined;
+      if (phone && !phone.startsWith('+')) {
+        // Si es venezolano y empieza por 0, asume +58
+        if (phone.startsWith('0')) {
+          phone = '+58' + phone.slice(1);
+        } else {
+          phone = '+' + phone;
+        }
+      }
+
+      // Validar image como URL
+      let image = formData.image || user.image || undefined;
+      if (image && !/^https?:\/\//.test(image)) {
+        image = undefined;
+      }
+
+      // Limpiar address
+      const address = cleanObject({
+        address: formData.address || (user.address ? user.address.address : undefined),
+        city: formData.city || (user.address ? user.address.city : undefined),
+        state: formData.state || (user.address ? user.address.state : undefined),
+        stateCode: formData.stateCode || (user.address ? user.address.stateCode : undefined),
+        postalCode: formData.postalCode || (user.address ? user.address.postalCode : undefined),
+        coordinates: cleanObject({
+          lat: formData.coordinates.lat ? Number(formData.coordinates.lat) : (user.address && user.address.coordinates ? user.address.coordinates.lat : undefined),
+          lng: formData.coordinates.lng ? Number(formData.coordinates.lng) : (user.address && user.address.coordinates ? user.address.coordinates.lng : undefined)
+        }),
+        country: formData.country || (user.address ? user.address.country : undefined)
+      });
+
+      // Limpiar hair
+      const hair = cleanObject({
+        color: formData.hairColor || (user.hair ? user.hair.color : undefined),
+        type: formData.hairType || (user.hair ? user.hair.type : undefined)
+      });
+
+      const updatedUser = cleanObject({
+        email: formData.email || user.email,
+        username: formData.username || user.username,
+        firstName: formData.firstName || user.firstName,
+        lastName: formData.lastName || user.lastName,
+        maidenName: formData.maidenName || user.maidenName,
+        age: formData.age ? Number(formData.age) : undefined,
+        gender: formData.gender || user.gender,
+        phone,
+        birthDate: formData.birthDate || user.birthDate,
+        image,
+        bloodGroup: formData.bloodGroup || user.bloodGroup,
+        height: formData.height ? Number(formData.height) : undefined,
+        weight: formData.weight ? Number(formData.weight) : undefined,
+        eyeColor: formData.eyeColor || user.eyeColor,
+        ip: formData.ip || user.ip,
+        macAddress: formData.macAddress || user.macAddress,
+        university: formData.university || user.university,
+        ein: formData.ein || user.ein,
+        ssn: formData.ssn || user.ssn,
+        userAgent: formData.userAgent || user.userAgent,
+        hair,
+        address,
+        bank: cleanObject({
+          cardExpire: formData.cardExpire || (user.bank ? user.bank.cardExpire : undefined),
+          cardNumber: formData.cardNumber || (user.bank ? user.bank.cardNumber : undefined),
+          cardType: formData.cardType || (user.bank ? user.bank.cardType : undefined),
+          currency: formData.currency || (user.bank ? user.bank.currency : undefined),
+          iban: formData.iban || (user.bank ? user.bank.iban : undefined)
+        }),
+        company: cleanObject({
+          department: formData.department || (user.company ? user.company.department : undefined),
+          name: formData.company || (user.company ? user.company.name : undefined),
+          title: formData.title || (user.company ? user.company.title : undefined),
+          address: cleanObject({
+            address: formData.companyAddress || (user.company && user.company.address ? user.company.address.address : undefined),
+            city: formData.companyCity || (user.company && user.company.address ? user.company.address.city : undefined),
+            state: formData.companyState || (user.company && user.company.address ? user.company.address.state : undefined),
+            postalCode: formData.companyPostalCode || (user.company && user.company.address ? user.company.address.postalCode : undefined),
+            country: formData.companyCountry || (user.company && user.company.address ? user.company.address.country : undefined)
+          })
+        }),
+        crypto: cleanObject({
+          coin: formData.coin || (user.crypto ? user.crypto.coin : undefined),
+          wallet: formData.wallet || (user.crypto ? user.crypto.wallet : undefined),
+          network: formData.network || (user.crypto ? user.crypto.network : undefined)
+        })
+      });
+      console.log('Payload enviado al backend:', JSON.stringify(updatedUser, null, 2));
+      try {
+        const token = localStorage.getItem('token');
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/users/${user.id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify(updatedUser)
+        });
+        if (!res.ok) throw new Error('Error al actualizar el perfil');
+        const newUser = await res.json();
+        localStorage.setItem('user', JSON.stringify(newUser));
+        window.location.reload();
+      } catch {
+        alert('No se pudo actualizar el perfil.');
+      }
     }
   }
 

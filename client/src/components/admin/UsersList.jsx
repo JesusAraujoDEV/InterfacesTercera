@@ -12,15 +12,9 @@ export default function UsersList({ onSelectUser }) {
   const fetchUsers = async () => {
     try {
       setLoading(true)
-      const response = await fetch("https://dummyjson.com/users")
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/users`)
       const data = await response.json()
-
-      const usersWithStatus = data.users.map((user) => ({
-        ...user,
-        isActive: Math.random() > 0.2,
-      }))
-
-      setUsers(usersWithStatus)
+      setUsers(data)
     } catch (error) {
       console.error("Error fetching users:", error)
     } finally {
@@ -28,18 +22,35 @@ export default function UsersList({ onSelectUser }) {
     }
   }
 
-  const handleToggleUserStatus = (userId) => {
-    setUsers((prevUsers) =>
-      prevUsers.map((user) => (user.id === userId ? { ...user, isActive: !user.isActive } : user)),
-    )
-  }
-
   const filteredUsers = users.filter(
     (user) =>
-      user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (user.firstName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (user.lastName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase()),
   )
+
+  // Cambiar estado activo/inactivo
+  const handleToggleUserStatus = async (user) => {
+    const token = localStorage.getItem('token');
+    const action = user.status === 'active' ? 'block' : 'unblock';
+    try {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/block/${user.id}/${action}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      });
+      if (!res.ok) throw new Error('No se pudo cambiar el estado');
+      setUsers((prevUsers) =>
+        prevUsers.map((u) =>
+          u.id === user.id ? { ...u, status: user.status === 'active' ? 'inactive' : 'active' } : u
+        )
+      );
+    } catch {
+      alert('Error al cambiar el estado del usuario');
+    }
+  };
 
   if (loading) {
     return (
@@ -118,11 +129,11 @@ export default function UsersList({ onSelectUser }) {
                     <img
                       className="h-8 w-8 rounded-full object-cover"
                       src={user.image || "/placeholder.svg?height=32&width=32"}
-                      alt={user.firstName}
+                      alt={user.firstName || user.email}
                     />
                     <div className="ml-3">
                       <div className="text-sm font-medium text-gray-900">
-                        {user.firstName} {user.lastName}
+                        {(user.firstName || '') + ' ' + (user.lastName || '') || user.email}
                       </div>
                     </div>
                   </div>
@@ -133,18 +144,18 @@ export default function UsersList({ onSelectUser }) {
                     <label className="relative inline-flex items-center cursor-pointer mr-3">
                       <input
                         type="checkbox"
-                        checked={user.isActive}
-                        onChange={() => handleToggleUserStatus(user.id)}
+                        checked={user.status === 'active'}
+                        onChange={() => handleToggleUserStatus(user)}
                         className="sr-only peer"
                       />
                       <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                     </label>
                     <span
                       className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        user.isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                        user.status === 'active' ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
                       }`}
                     >
-                      {user.isActive ? "Activo" : "Inactivo"}
+                      {user.status === 'active' ? "Activo" : "Inactivo"}
                     </span>
                   </div>
                 </td>

@@ -7,18 +7,22 @@ import UserProfile from "../components/user/UserProfile"
 export default function Dashboard() {
   const [selectedUser, setSelectedUser] = useState(null)
   const [currentUser, setCurrentUser] = useState(null)
+  const [userStatus, setUserStatus] = useState(null)
+  const [statusLoading, setStatusLoading] = useState(false)
+  const [statusError, setStatusError] = useState(null)
   const navigate = useNavigate()
   const location = useLocation()
 
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem('token');
+      console.log(token); 
       if (!token) {
         navigate('/login');
         return;
       }
       try {
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/users/profile`, {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/profile`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -27,7 +31,9 @@ export default function Dashboard() {
           throw new Error('No autorizado');
         }
         const data = await res.json();
+        console.log(data); 
         setCurrentUser(data);
+        localStorage.setItem('user', JSON.stringify(data));
       } catch {
         navigate('/login');
       }
@@ -35,11 +41,37 @@ export default function Dashboard() {
     fetchProfile();
   }, [navigate]);
 
+  useEffect(() => {
+    const fetchStatus = async () => {
+      if (!currentUser || !currentUser.id) return;
+      setStatusLoading(true);
+      setStatusError(null);
+      try {
+        const token = localStorage.getItem('token');
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/block/status/${currentUser.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
+        if (!res.ok) throw new Error('No se pudo obtener el estado');
+        const data = await res.json();
+        setUserStatus(data.status);
+      } catch {
+        setStatusError('Error al obtener el estado');
+      } finally {
+        setStatusLoading(false);
+      }
+    };
+    fetchStatus();
+  }, [currentUser]);
+
   // Detectar si el admin quiere ver la vista de admin
   const params = new URLSearchParams(location.search)
   const isAdminView = params.get('view') === 'admin'
 
-  if (!currentUser) {
+  if (!currentUser || !currentUser.id) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
@@ -54,15 +86,25 @@ export default function Dashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <h1 className="text-2xl font-bold text-gray-900">
-              {currentUser.role === "admin" && isAdminView ? "Panel de Administrador" : "Mi Perfil"}
+              {currentUser && currentUser.role === "admin" && isAdminView ? "Panel de Administrador" : "Mi Perfil"}
             </h1>
             <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">
-                Bienvenido, {currentUser.firstName || ''} {currentUser.lastName || ''}
+              <span className="text-sm text-gray-600 flex items-center gap-2">
+                Bienvenido, {((currentUser.firstName || '') + ' ' + (currentUser.lastName || '')).trim() || currentUser.email}
+                {/* Badge de estado */}
+                {statusLoading ? (
+                  <span className="ml-2 px-2 py-0.5 rounded-full bg-gray-200 text-gray-600 text-xs">Cargando...</span>
+                ) : userStatus === 'active' ? (
+                  <span className="ml-2 px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-xs font-semibold">Activo</span>
+                ) : userStatus === 'inactive' ? (
+                  <span className="ml-2 px-2 py-0.5 rounded-full bg-red-100 text-red-700 text-xs font-semibold">Inactivo</span>
+                ) : statusError ? (
+                  <span className="ml-2 px-2 py-0.5 rounded-full bg-red-100 text-red-700 text-xs">{statusError}</span>
+                ) : null}
               </span>
               <div className="flex space-x-2">
                 <span
-                  className={`px-2 py-1 rounded-full text-xs font-medium ${
+                  className={`px-4 py-0 flex items-center justify-center rounded-full text-xs font-medium ${
                     currentUser.role === "admin" && isAdminView ? "bg-purple-100 text-purple-800" : "bg-blue-100 text-blue-800"
                   }`}
                 >
@@ -96,7 +138,7 @@ export default function Dashboard() {
           </div>
         ) : (
           <div className="max-w-4xl mx-auto">
-            <UserProfile userId={currentUser.id} />
+            <UserProfile user={currentUser} status={userStatus} />
           </div>
         )}
       </main>

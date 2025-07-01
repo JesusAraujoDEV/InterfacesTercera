@@ -1,58 +1,24 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import ProfileWizard from "./ProfileWizard"
 import UserMap from "../common/UserMap"
 
-export default function UserProfile({ userId }) {
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
+export default function UserProfile({ user, status }) {
   const [activeSection, setActiveSection] = useState("personal")
   const [isEditing, setIsEditing] = useState(false)
 
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        setLoading(true)
-        // Simular carga del perfil del usuario
-        const response = await fetch(`https://dummyjson.com/users/${userId}`)
-        const userData = await response.json()
-        setUser(userData)
-      } catch (error) {
-        console.error("Error fetching user profile:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchUserProfile()
-  }, [userId])
-
-  const handleProfileUpdate = (updatedUser) => {
-    setUser(updatedUser)
+  const handleProfileUpdate = () => {
     setIsEditing(false)
   }
 
+  // Calcular porcentaje de completado del perfil
+  const profileFields = [
+    'firstName', 'lastName', 'maidenName', 'age', 'gender', 'phone', 'username', 'birthDate', 'image', 'bloodGroup', 'height', 'weight', 'eyeColor', 'ip', 'macAddress', 'university', 'ein', 'ssn', 'userAgent', 'hair', 'address', 'bank', 'company', 'crypto'
+  ];
+  const filledFields = profileFields.filter(field => user && user[field] !== null && user[field] !== undefined && user[field] !== '');
+  const percentComplete = Math.round((filledFields.length / profileFields.length) * 100);
+
   if (isEditing) {
     return <ProfileWizard user={user} onSave={handleProfileUpdate} onCancel={() => setIsEditing(false)} />
-  }
-
-  if (loading) {
-    return (
-      <div className="bg-white rounded-lg shadow p-6">
-        <div className="animate-pulse space-y-4">
-          <div className="flex items-center space-x-4">
-            <div className="w-20 h-20 bg-gray-200 rounded-full"></div>
-            <div className="space-y-2">
-              <div className="h-4 bg-gray-200 rounded w-32"></div>
-              <div className="h-3 bg-gray-200 rounded w-48"></div>
-            </div>
-          </div>
-          <div className="space-y-3">
-            <div className="h-4 bg-gray-200 rounded w-1/4"></div>
-            <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-          </div>
-        </div>
-      </div>
-    )
   }
 
   if (!user) {
@@ -92,13 +58,29 @@ export default function UserProfile({ userId }) {
                 <h2 className="text-2xl font-bold text-gray-900">
                   {user.firstName} {user.lastName}
                 </h2>
-                <p className="text-gray-600">{user.email}</p>
+                <p className="text-gray-600 flex items-center gap-2">
+                  {user.email}
+                  {status === 'active' && (
+                    <span className="ml-2 px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-xs font-semibold">Activo</span>
+                  )}
+                  {status === 'inactive' && (
+                    <span className="ml-2 px-2 py-0.5 rounded-full bg-red-100 text-red-700 text-xs font-semibold">Inactivo</span>
+                  )}
+                </p>
                 <p className="text-sm text-gray-500">{user.phone}</p>
                 <div className="flex items-center mt-2 space-x-2">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    Perfil Activo
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    Perfil completado: {percentComplete}%
                   </span>
+                </div>
+                <div className="flex items-center mt-2 space-x-2">
                   <span className="text-xs text-gray-500">ID: {user.id}</span>
+                  {status === 'active' && (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Activo</span>
+                  )}
+                  {status === 'inactive' && (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">Inactivo</span>
+                  )}
                 </div>
               </div>
             </div>
@@ -284,7 +266,7 @@ export default function UserProfile({ userId }) {
         <h3 className="text-lg font-medium text-gray-900 mb-4">Estadísticas del Perfil</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-blue-50 rounded-lg p-4 text-center">
-            <div className="text-2xl font-bold text-blue-600">100%</div>
+            <div className="text-2xl font-bold text-blue-600">{percentComplete}%</div>
             <div className="text-sm text-gray-600">Perfil Completado</div>
           </div>
           <div className="bg-green-50 rounded-lg p-4 text-center">
@@ -292,7 +274,12 @@ export default function UserProfile({ userId }) {
             <div className="text-sm text-gray-600">Última Actualización</div>
           </div>
           <div className="bg-purple-50 rounded-lg p-4 text-center">
-            <div className="text-2xl font-bold text-purple-600">Activo</div>
+            {status === 'active' && (
+              <div className="text-2xl font-bold text-green-600">Activo</div>
+            )}
+            {status === 'inactive' && (
+              <div className="text-2xl font-bold text-red-600">Inactivo</div>
+            )}
             <div className="text-sm text-gray-600">Estado del Perfil</div>
           </div>
         </div>

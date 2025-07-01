@@ -271,3 +271,11 @@ body {
     font-size: 0.875rem;
   }
 }
+
+:root {
+  --color-primary: #57534E;
+  --color-secondary: #FFFFFF;
+  --color-accent: #44403C;
+  --color-text: #78716C;
+  --color-neutral: #E7E5E4;
+}

@@ -21,9 +21,9 @@ const ContactSection = () => {
   }
 
   return (
-    <section id="contact-section" className="px-12 lg:px-32 py-16 relative">
+    <section id="contact-section" className="px-12 lg:px-32 py-16 relative" style={{ background: 'var(--color-secondary)' }}>
       {/* Main text start */}
-      <h1 className="uppercase text-5xl mb-4 font-semibold">Contact us</h1>
+      <h1 className="uppercase text-5xl mb-4 font-semibold" style={{ color: 'var(--color-primary)' }}>Contact us</h1>
       {/* Main text end */}
 
       {/* Form start */}
@@ -33,7 +33,7 @@ const ContactSection = () => {
         </div>
         <div className="flex flex-col w-full items-center">
           <div className="flex flex-col items-center w-full max-w-xs px-2 mb-6">
-            <p className="text-xs sm:text-sm mt-2 text-stone-500">E-mail address</p>
+            <p className="text-xs sm:text-sm mt-2" style={{ color: 'var(--color-text)' }}>E-mail address</p>
             <input
               type="email"
               name="email"
@@ -41,12 +41,13 @@ const ContactSection = () => {
               value={formData.email}
               onChange={handleInputChange}
               placeholder="example@domain.com"
-              className="w-full px-3 py-2 sm:py-2.5 border border-stone-300 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-opacity-75 transition-all duration-300 text-sm sm:text-base focus:ring-stone-500"
+              className="w-full px-3 py-2 sm:py-2.5 border rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-opacity-75 transition-all duration-300 text-sm sm:text-base"
+              style={{ borderColor: 'var(--color-primary)', color: 'var(--color-text)' }}
               required
             />
           </div>
 
-          <p className="text-xs sm:text-sm mt-2 text-stone-500">Message</p>
+          <p className="text-xs sm:text-sm mt-2" style={{ color: 'var(--color-text)' }}>Message</p>
           <div className="flex flex-col items-center w-full max-w-xs px-2 mb-6">
             <textarea
               name="message"
@@ -56,14 +57,16 @@ const ContactSection = () => {
               value={formData.message}
               onChange={handleInputChange}
               placeholder="Type your message here..."
-              className="w-full px-3 py-2 sm:py-2.5 border border-stone-300 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-opacity-75 transition-all duration-300 text-sm sm:text-base focus:ring-stone-500 resize-vertical"
+              className="w-full px-3 py-2 sm:py-2.5 border rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-opacity-75 transition-all duration-300 text-sm sm:text-base resize-vertical"
+              style={{ borderColor: 'var(--color-primary)', color: 'var(--color-text)' }}
               required
             ></textarea>
           </div>
 
           <button
             onClick={handleSubmit}
-            className="btn w-full md:w-1/2 bg-stone-700 text-white px-6 py-3 rounded-md hover:bg-stone-800 transition-colors font-medium"
+            className="btn w-full md:w-1/2 px-6 py-3 rounded-md transition-colors font-medium"
+            style={{ background: 'var(--color-primary)', color: 'var(--color-secondary)' }}
           >
             Send
           </button>
@@ -72,7 +75,7 @@ const ContactSection = () => {
       {/* Form end */}
 
       {/* Circle start */}
-      <div className="bg-neutral-200 h-44 w-44 md:h-52 md:w-52 rounded-full absolute -top-20 left-0 mt-16 -z-20"></div>
+      <div className="h-44 w-44 md:h-52 md:w-52 rounded-full absolute -top-20 left-0 mt-16 -z-20" style={{ background: 'var(--color-neutral)' }}></div>
       {/* Circle end */}
     </section>
   )

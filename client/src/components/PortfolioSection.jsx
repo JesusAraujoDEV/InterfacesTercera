@@ -11,12 +11,12 @@ import Portfolio10 from "../assets/portfolio/portfolio10.jpg"
 
 const PortfolioSection = () => {
   return (
-    <section id="portfolio-section" className="px-4 lg:px-8 py-16 relative">
+    <section id="portfolio-section" className="px-4 lg:px-8 py-16 relative" style={{ background: 'var(--color-secondary)' }}>
       {/* Text wrapper start */}
       <div className="flex gap-8 flex-col md:flex-row">
         {/* Main text start */}
-        <h1 className="uppercase text-5xl mb-4 font-semibold">OUR PORTFOLIO</h1>
-        <p className="capitalize xl:w-1/2 text-stone-500 mb-8">
+        <h1 className="uppercase text-5xl mb-4 font-semibold" style={{ color: 'var(--color-primary)' }}>OUR PORTFOLIO</h1>
+        <p className="capitalize xl:w-1/2 mb-8" style={{ color: 'var(--color-text)' }}>
           Lorem, ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit dolores distinctio reiciendis
           obcaecati ea.
         </p>
@@ -66,7 +66,7 @@ const PortfolioSection = () => {
 
       {/* "More" link start */}
       <a href="#" className="text-end">
-        <p className="font-semibold text-lg group relative">
+        <p className="font-semibold text-lg group relative" style={{ color: 'var(--color-accent)' }}>
           <span>Show more photos </span>
           <i className="fa-solid fa-arrow-right"></i>
         </p>
@@ -74,7 +74,7 @@ const PortfolioSection = () => {
       {/* "More" link end */}
 
       {/* Circle start */}
-      <div className="bg-neutral-300 h-64 w-64 rounded-full absolute top-0 left-0 mt-16 -z-20"></div>
+      <div className="h-64 w-64 rounded-full absolute top-0 left-0 mt-16 -z-20" style={{ background: 'var(--color-neutral)' }}></div>
       {/* Circle end */}
     </section>
   )

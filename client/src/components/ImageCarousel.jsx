@@ -85,11 +85,11 @@ const ImageCarousel = () => {
   }, [swiper])
 
   return (
-    <div className="image-carousel-container px-4 lg:px-8 py-16 relative overflow-x-hidden max-w-full">
+    <div className="image-carousel-container px-4 lg:px-8 py-16 relative overflow-x-hidden max-w-full" style={{ background: 'var(--color-secondary)' }}>
       {/* Título del carrusel */}
       <div className="text-center mb-12">
-        <h2 className="uppercase text-4xl lg:text-5xl font-semibold mb-4 text-stone-800">Featured Gallery</h2>
-        <p className="text-stone-500 max-w-2xl mx-auto">
+        <h2 className="uppercase text-4xl lg:text-5xl font-semibold mb-4" style={{ color: 'var(--color-primary)' }}>Featured Gallery</h2>
+        <p className="max-w-2xl mx-auto" style={{ color: 'var(--color-text)' }}>
           Explore our most stunning photography work through this interactive gallery
         </p>
       </div>
@@ -146,16 +146,16 @@ const ImageCarousel = () => {
                 />
 
                 {/* Overlay con información */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                <div className="absolute inset-0 transition-opacity duration-300" style={{ background: 'linear-gradient(to top, var(--color-primary), transparent 80%)', opacity: 0 }}>
+                  <div className="absolute bottom-0 left-0 right-0 p-6" style={{ color: 'var(--color-secondary)' }}>
                     <h3 className="text-xl lg:text-2xl font-semibold mb-2">{image.title}</h3>
                     <p className="text-sm lg:text-base opacity-90">{image.description}</p>
                   </div>
                 </div>
 
                 {/* Badge de categoría */}
-                <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
-                  <span className="text-xs font-medium text-gray-800">{image.category}</span>
+                <div className="absolute top-4 left-4 px-3 py-1 rounded-full" style={{ background: 'var(--color-neutral)' }}>
+                  <span className="text-xs font-medium" style={{ color: 'var(--color-primary)' }}>{image.category}</span>
                 </div>
               </div>
             </SwiperSlide>
@@ -165,10 +165,12 @@ const ImageCarousel = () => {
         {/* Navegación personalizada */}
         <div
           ref={prevRef}
-          className="swiper-button-prev-custom absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center cursor-pointer shadow-lg hover:bg-white transition-all duration-300 group md:flex"
+          className="swiper-button-prev-custom absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full flex items-center justify-center cursor-pointer shadow-lg transition-all duration-300 group md:flex"
+          style={{ background: 'var(--color-primary)', color: 'var(--color-secondary)' }}
         >
           <svg
-            className="w-5 h-5 text-gray-700 group-hover:text-gray-900 transition-colors"
+            className="w-5 h-5 transition-colors"
+            style={{ color: 'var(--color-secondary)' }}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -179,10 +181,12 @@ const ImageCarousel = () => {
 
         <div
           ref={nextRef}
-          className="swiper-button-next-custom absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center cursor-pointer shadow-lg hover:bg-white transition-all duration-300 group md:flex"
+          className="swiper-button-next-custom absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full flex items-center justify-center cursor-pointer shadow-lg transition-all duration-300 group md:flex"
+          style={{ background: 'var(--color-primary)', color: 'var(--color-secondary)' }}
         >
           <svg
-            className="w-5 h-5 text-gray-700 group-hover:text-gray-900 transition-colors"
+            className="w-5 h-5 transition-colors"
+            style={{ color: 'var(--color-secondary)' }}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -196,7 +200,7 @@ const ImageCarousel = () => {
       </div>
 
       {/* Círculo decorativo */}
-      <div className="bg-neutral-200 h-32 w-32 rounded-full absolute -top-10 -right-10 -z-10 opacity-50"></div>
+      <div className="bg-neutral-200 h-32 w-32 rounded-full absolute -top-10 -right-10 -z-10 opacity-50" style={{ background: 'var(--color-neutral)' }}></div>
 
       <style jsx>{`
         .image-carousel-container {
@@ -237,6 +241,10 @@ const ImageCarousel = () => {
         .swiper-button-prev-custom:hover,
         .swiper-button-next-custom:hover {
           transform: translateY(-50%) scale(1.1);
+        }
+
+        .group:hover .absolute.inset-0 {
+          opacity: 1 !important;
         }
 
         @media (max-width: 768px) {

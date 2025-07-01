@@ -1,0 +1,10 @@
+{
+  "primary": "#57534E",
+  "secondary": "#FFFFFF",
+  "accent": "#44403C",
+  "text": "#78716C",
+  "neutral": "#E7E5E4",
+  "name": "Stone (Predeterminado)",
+  "id": "default-stone",
+  "createdAt": "2020-01-01T00:00:00.000Z"
+}

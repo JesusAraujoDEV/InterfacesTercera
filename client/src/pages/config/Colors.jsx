@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react"
 import { Link } from "react-router-dom"
+import { useColor } from "../../contexts/ColorContext"
 import photographerImage from "../../assets/image.jpg"
 
 const Colors = () => {
@@ -23,146 +24,136 @@ const Colors = () => {
   const [paletteToDelete, setPaletteToDelete] = useState(null)
   const [paletteToRename, setPaletteToRename] = useState(null)
 
-  const initializeDefaultPalettes = useCallback(() => {
-    const defaultPalettes = [
-      {
-        id: "default-stone",
-        name: "Stone (Predeterminado)",
-        colors: {
-          primary: "#57534E",
-          secondary: "#FFFFFF",
-          accent: "#44403C",
-          text: "#78716C",
-          neutral: "#E7E5E4",
-        },
-        isDefault: true,
-        createdAt: new Date("2020-01-01"),
-      },
-      {
-        id: "default-slate",
-        name: "Slate",
-        colors: {
-          primary: "#475569",
-          secondary: "#F8FAFC",
-          accent: "#334155",
-          text: "#64748B",
-          neutral: "#E2E8F0",
-        },
-        isDefault: true,
-        createdAt: new Date("2020-01-02"),
-      },
-      {
-        id: "default-zinc",
-        name: "Zinc",
-        colors: {
-          primary: "#52525B",
-          secondary: "#FAFAFA",
-          accent: "#3F3F46",
-          text: "#71717A",
-          neutral: "#E4E4E7",
-        },
-        isDefault: true,
-        createdAt: new Date("2020-01-03"),
-      },
-      {
-        id: "default-neutral",
-        name: "Neutral",
-        colors: {
-          primary: "#525252",
-          secondary: "#FAFAFA",
-          accent: "#404040",
-          text: "#737373",
-          neutral: "#E5E5E5",
-        },
-        isDefault: true,
-        createdAt: new Date("2020-01-04"),
-      },
-      {
-        id: "default-warm",
-        name: "Cálido",
-        colors: {
-          primary: "#B45309",
-          secondary: "#FFFBEB",
-          accent: "#92400E",
-          text: "#D97706",
-          neutral: "#FEF3C7",
-        },
-        isDefault: true,
-        createdAt: new Date("2020-01-05"),
-      },
-      {
-        id: "default-cool",
-        name: "Frío",
-        colors: {
-          primary: "#0369A1",
-          secondary: "#F0F9FF",
-          accent: "#075985",
-          text: "#0EA5E9",
-          neutral: "#E0F2FE",
-        },
-        isDefault: true,
-        createdAt: new Date("2020-01-06"),
-      },
-      {
-        id: "default-dark",
-        name: "Oscuro",
-        colors: {
-          primary: "#1E293B",
-          secondary: "#F8FAFC",
-          accent: "#0F172A",
-          text: "#334155",
-          neutral: "#CBD5E1",
-        },
-        isDefault: true,
-        createdAt: new Date("2020-01-07"),
-      },
-    ]
+  const { setPalette, applyPalette } = useColor()
 
-    setPalettes(defaultPalettes)
-    setActivePaletteId("default-stone")
+  // Paletas predefinidas
+  const defaultPalettes = [
+    {
+      id: "default-stone",
+      name: "Stone (Predeterminado)",
+      colors: {
+        primary: "#57534E",
+        secondary: "#FFFFFF",
+        accent: "#44403C",
+        text: "#78716C",
+        neutral: "#E7E5E4",
+      },
+      isDefault: true,
+      createdAt: new Date("2020-01-01"),
+    },
+    {
+      id: "default-slate",
+      name: "Slate",
+      colors: {
+        primary: "#475569",
+        secondary: "#F8FAFC",
+        accent: "#334155",
+        text: "#64748B",
+        neutral: "#E2E8F0",
+      },
+      isDefault: true,
+      createdAt: new Date("2020-01-02"),
+    },
+    {
+      id: "default-zinc",
+      name: "Zinc",
+      colors: {
+        primary: "#52525B",
+        secondary: "#FAFAFA",
+        accent: "#3F3F46",
+        text: "#71717A",
+        neutral: "#E4E4E7",
+      },
+      isDefault: true,
+      createdAt: new Date("2020-01-03"),
+    },
+    {
+      id: "default-neutral",
+      name: "Neutral",
+      colors: {
+        primary: "#525252",
+        secondary: "#FAFAFA",
+        accent: "#404040",
+        text: "#737373",
+        neutral: "#E5E5E5",
+      },
+      isDefault: true,
+      createdAt: new Date("2020-01-04"),
+    },
+    {
+      id: "default-warm",
+      name: "Cálido",
+      colors: {
+        primary: "#B45309",
+        secondary: "#FFFBEB",
+        accent: "#92400E",
+        text: "#D97706",
+        neutral: "#FEF3C7",
+      },
+      isDefault: true,
+      createdAt: new Date("2020-01-05"),
+    },
+    {
+      id: "default-cool",
+      name: "Frío",
+      colors: {
+        primary: "#0369A1",
+        secondary: "#F0F9FF",
+        accent: "#075985",
+        text: "#0EA5E9",
+        neutral: "#E0F2FE",
+      },
+      isDefault: true,
+      createdAt: new Date("2020-01-06"),
+    },
+    {
+      id: "default-dark",
+      name: "Oscuro",
+      colors: {
+        primary: "#1E293B",
+        secondary: "#F8FAFC",
+        accent: "#0F172A",
+        text: "#334155",
+        neutral: "#CBD5E1",
+      },
+      isDefault: true,
+      createdAt: new Date("2020-01-07"),
+    },
+  ]
 
-    // Aplicar la paleta activa
-    const activePalette = defaultPalettes.find((p) => p.id === "default-stone")
-    if (activePalette) {
-      applyPalette(activePalette)
-    }
-  }, [])
-
-  
-  // Inicializar paletas predeterminadas
+  // Al cargar, obtener paletas personalizadas del backend
   useEffect(() => {
-    initializeDefaultPalettes()
-  }, [initializeDefaultPalettes])
-
-  // Paletas ordenadas
-  const sortedPalettes = [...palettes].sort((a, b) => {
-    // Paleta activa primero
-    if (a.id === activePaletteId) return -1
-    if (b.id === activePaletteId) return 1
-
-    // Luego ordenar por tipo (predefinidas primero)
-    if (a.isDefault && !b.isDefault) return -1
-    if (!a.isDefault && b.isDefault) return 1
-
-    // Si ambas son del mismo tipo, ordenar por fecha (más reciente primero)
-    return new Date(b.createdAt) - new Date(a.createdAt)
-  })
+    fetch('http://localhost:3001/api/palettes')
+      .then(res => res.json())
+      .then(data => {
+        setPalettes([...defaultPalettes, ...data.map(p => ({
+          ...p,
+          colors: {
+            primary: p.primary,
+            secondary: p.secondary,
+            accent: p.accent,
+            text: p.text,
+            neutral: p.neutral,
+          },
+          isDefault: false
+        }))])
+      })
+      .catch(() => setPalettes(defaultPalettes))
+  }, [])
 
   const isActivePalette = (palette) => palette.id === activePaletteId
 
   const selectPalette = (palette) => {
     if (isActivePalette(palette)) return
-
-    applyPalette(palette)
+    applyPalette(palette.colors)
+    setPalette(palette.colors)
     setActivePaletteId(palette.id)
-  }
-
-  const applyPalette = (palette) => {
-    setPrimaryColor(palette.colors.primary)
-    setSecondaryColor(palette.colors.secondary)
-    setAccentColor(palette.colors.accent)
-    setTextColor(palette.colors.text)
-    setNeutralColor(palette.colors.neutral)
+    // Guardar la paleta activa en el backend
+    fetch('http://localhost:3001/api/palette', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...palette.colors, name: palette.name, id: palette.id, createdAt: palette.createdAt })
+    })
   }
 
   // Funciones para modal de guardado
@@ -179,45 +170,41 @@ const Colors = () => {
   }
 
   const savePalette = () => {
-    // Validar nombre
     if (!newPaletteName.trim()) {
       setPaletteNameError("El nombre de la paleta es obligatorio")
       return
     }
-
-    // Verificar si ya existe una paleta con ese nombre
-    const existingPalette = palettes.find(
-      (p) => p.name.toLowerCase() === newPaletteName.trim().toLowerCase() && !p.isDefault,
-    )
-
-    if (existingPalette) {
-      setPaletteNameError("Ya existe una paleta con ese nombre")
-      return
-    }
-
-    // Crear nueva paleta
     const newPalette = {
-      id: `palette-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       name: newPaletteName.trim(),
-      colors: {
-        primary: primaryColor,
-        secondary: secondaryColor,
-        accent: accentColor,
-        text: textColor,
-        neutral: neutralColor,
-      },
-      isDefault: false,
-      createdAt: new Date(),
+      primary: primaryColor,
+      secondary: secondaryColor,
+      accent: accentColor,
+      text: textColor,
+      neutral: neutralColor,
     }
-
-    // Agregar a la lista y seleccionarla
-    setPalettes([...palettes, newPalette])
-    setActivePaletteId(newPalette.id)
-
-    // Cerrar modal
-    setShowSaveModal(false)
-    setNewPaletteName("")
-    setPaletteNameError("")
+    fetch('http://localhost:3001/api/palettes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newPalette)
+    })
+      .then(res => res.json())
+      .then(data => {
+        setPalettes(prev => [...prev, {
+          ...data.palette,
+          colors: {
+            primary: data.palette.primary,
+            secondary: data.palette.secondary,
+            accent: data.palette.accent,
+            text: data.palette.text,
+            neutral: data.palette.neutral,
+          },
+          isDefault: false
+        }])
+        setShowSaveModal(false)
+        setNewPaletteName("")
+        setPaletteNameError("")
+      })
+      .catch(() => setPaletteNameError("Error al guardar la paleta"))
   }
 
   // Funciones para modal de eliminación
@@ -488,14 +475,14 @@ const Colors = () => {
               </tr>
             </thead>
             <tbody>
-              {sortedPalettes.length === 0 ? (
+              {palettes.length === 0 ? (
                 <tr>
                   <td colSpan="4" className="text-center py-8 text-stone-500">
                     No hay paletas guardadas
                   </td>
                 </tr>
               ) : (
-                sortedPalettes.map((palette) => (
+                palettes.map((palette) => (
                   <tr
                     key={palette.id}
                     className={`border-b border-stone-100 hover:bg-stone-50 transition-colors ${

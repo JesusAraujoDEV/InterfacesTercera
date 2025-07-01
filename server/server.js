@@ -8,6 +8,8 @@ const PORT = 3001;
 app.use(cors());
 app.use(express.json());
 
+const { addPaletteEndpoints } = require('./colores');
+
 const USERS_FILE = path.join(__dirname, 'users.json');
 
 // Usuario administrador predefinido
@@ -111,6 +113,9 @@ app.get('/api/users', (req, res) => {
   const usersWithoutPasswords = users.map(({ password, ...rest }) => rest);
   res.json(usersWithoutPasswords);
 });
+
+// Agregar endpoints de paleta de colores
+addPaletteEndpoints(app);
 
 // Servidor escuchando
 app.listen(PORT, () => {

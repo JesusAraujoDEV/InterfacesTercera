@@ -66,31 +66,31 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm shadow-sm">
+    <nav className="fixed top-0 left-0 right-0 z-50 shadow-sm" style={{ background: 'var(--color-secondary)', color: 'var(--color-text)', backdropFilter: 'blur(4px)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Brand */}
           <Link to="/" className="flex flex-col">
-            <span className="text-sm font-bold tracking-wider text-stone-800">LANDING</span>
-            <span className="text-xs font-light tracking-wider text-stone-600">PHOTOGRAPHY</span>
+            <span className="text-sm font-bold tracking-wider" style={{ color: 'var(--color-primary)' }}>LANDING</span>
+            <span className="text-xs font-light tracking-wider" style={{ color: 'var(--color-accent)' }}>PHOTOGRAPHY</span>
           </Link>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/" className="text-stone-700 hover:text-stone-900 font-medium">
+            <Link to="/" className="font-medium hover:underline" style={{ color: 'var(--color-text)' }}>
               Home
             </Link>
-            <a href="#about" className="text-stone-700 hover:text-stone-900 font-medium">
+            <a href="#about" className="font-medium hover:underline" style={{ color: 'var(--color-text)' }}>
               About
             </a>
-            <a href="#portfolio" className="text-stone-700 hover:text-stone-900 font-medium">
+            <a href="#portfolio" className="font-medium hover:underline" style={{ color: 'var(--color-text)' }}>
               Portfolio
             </a>
-            <a href="#contact-us" className="text-stone-700 hover:text-stone-900 font-medium">
+            <a href="#contact-us" className="font-medium hover:underline" style={{ color: 'var(--color-text)' }}>
               Contact us
             </a>
             {user && user.role === 'admin' && (
-              <Link to="/config" className="text-stone-700 hover:text-stone-900 font-medium">
+              <Link to="/config" className="font-medium hover:underline" style={{ color: 'var(--color-primary)' }}>
                 Configuración
               </Link>
             )}
@@ -98,30 +98,34 @@ const Navbar = () => {
               <div className="relative flex items-center" ref={dropdownRef}>
                 <button
                   className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-stone-200 focus:outline-none"
+                  style={{ background: 'var(--color-neutral)' }}
                   onClick={() => setDropdownOpen((open) => !open)}
                 >
                   <img src={UserIcon} alt="User" className="w-7 h-7" />
                 </button>
-                <span className="ml-2 text-stone-700 font-medium max-w-[120px] truncate">{user.firstName}</span>
+                <span className="ml-2 font-medium max-w-[120px] truncate" style={{ color: 'var(--color-primary)' }}>{user.firstName}</span>
                 {dropdownOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-40 bg-white rounded-md shadow-lg py-2 z-50 border">
+                  <div className="absolute right-0 top-full mt-2 w-40 bg-white rounded-md shadow-lg py-2 z-50 border" style={{ background: 'var(--color-secondary)' }}>
                     {user.role === 'admin' ? (
                       <button
-                        className="block w-full text-left px-4 py-2 text-stone-700 hover:bg-stone-100"
+                        className="block w-full text-left px-4 py-2 hover:bg-stone-100"
+                        style={{ color: 'var(--color-primary)' }}
                         onClick={() => { setDropdownOpen(false); navigate('/dashboard?view=admin') }}
                       >
                         Ver usuarios
                       </button>
                     ) : (
                       <button
-                        className="block w-full text-left px-4 py-2 text-stone-700 hover:bg-stone-100"
+                        className="block w-full text-left px-4 py-2 hover:bg-stone-100"
+                        style={{ color: 'var(--color-primary)' }}
                         onClick={handleProfile}
                       >
                         Ver perfil
                       </button>
                     )}
                     <button
-                      className="block w-full text-left px-4 py-2 text-stone-700 hover:bg-stone-100"
+                      className="block w-full text-left px-4 py-2 hover:bg-stone-100"
+                      style={{ color: 'var(--color-accent)' }}
                       onClick={handleLogout}
                     >
                       Cerrar sesión
@@ -132,7 +136,8 @@ const Navbar = () => {
             ) : (
               <Link
                 to="/login"
-                className="bg-stone-700 text-white px-4 py-2 rounded hover:bg-stone-800 transition-colors"
+                className="px-4 py-2 rounded transition-colors"
+                style={{ background: 'var(--color-primary)', color: 'var(--color-secondary)' }}
               >
                 Login
               </Link>
@@ -148,20 +153,20 @@ const Navbar = () => {
         {/* Mobile Menu */}
         {isOpen && (
           <div className="md:hidden py-4 space-y-4">
-            <Link to="/" className="block text-stone-700 hover:text-stone-900 font-medium" onClick={closeMenu}>
+            <Link to="/" className="block font-medium hover:underline" style={{ color: 'var(--color-text)' }} onClick={closeMenu}>
               Home
             </Link>
-            <a href="#about" className="block text-stone-700 hover:text-stone-900 font-medium" onClick={closeMenu}>
+            <a href="#about" className="block font-medium hover:underline" style={{ color: 'var(--color-text)' }} onClick={closeMenu}>
               About
             </a>
-            <a href="#portfolio" className="block text-stone-700 hover:text-stone-900 font-medium" onClick={closeMenu}>
+            <a href="#portfolio" className="block font-medium hover:underline" style={{ color: 'var(--color-text)' }} onClick={closeMenu}>
               Portfolio
             </a>
-            <a href="#contact-us" className="block text-stone-700 hover:text-stone-900 font-medium" onClick={closeMenu}>
+            <a href="#contact-us" className="block font-medium hover:underline" style={{ color: 'var(--color-text)' }} onClick={closeMenu}>
               Contact us
             </a>
             {user && user.role === 'admin' && (
-              <Link to="/config" className="block text-stone-700 hover:text-stone-900 font-medium" onClick={closeMenu}>
+              <Link to="/config" className="block font-medium hover:underline" style={{ color: 'var(--color-primary)' }} onClick={closeMenu}>
                 Configuración
               </Link>
             )}
@@ -169,30 +174,34 @@ const Navbar = () => {
               <div className="relative flex items-center" ref={dropdownRef}>
                 <button
                   className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-stone-200 focus:outline-none"
+                  style={{ background: 'var(--color-neutral)' }}
                   onClick={() => setDropdownOpen((open) => !open)}
                 >
                   <img src={UserIcon} alt="User" className="w-7 h-7" />
                 </button>
-                <span className="ml-2 text-stone-700 font-medium max-w-[120px] truncate">{user.firstName}</span>
+                <span className="ml-2 font-medium max-w-[120px] truncate" style={{ color: 'var(--color-primary)' }}>{user.firstName}</span>
                 {dropdownOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-40 bg-white rounded-md shadow-lg py-2 z-50 border">
+                  <div className="absolute right-0 top-full mt-2 w-40 bg-white rounded-md shadow-lg py-2 z-50 border" style={{ background: 'var(--color-secondary)' }}>
                     {user.role === 'admin' ? (
                       <button
-                        className="block w-full text-left px-4 py-2 text-stone-700 hover:bg-stone-100"
+                        className="block w-full text-left px-4 py-2 hover:bg-stone-100"
+                        style={{ color: 'var(--color-primary)' }}
                         onClick={() => { setDropdownOpen(false); navigate('/dashboard?view=admin'); closeMenu(); }}
                       >
                         Ver usuarios
                       </button>
                     ) : (
                       <button
-                        className="block w-full text-left px-4 py-2 text-stone-700 hover:bg-stone-100"
+                        className="block w-full text-left px-4 py-2 hover:bg-stone-100"
+                        style={{ color: 'var(--color-primary)' }}
                         onClick={() => { handleProfile(); closeMenu(); }}
                       >
                         Ver perfil
                       </button>
                     )}
                     <button
-                      className="block w-full text-left px-4 py-2 text-stone-700 hover:bg-stone-100"
+                      className="block w-full text-left px-4 py-2 hover:bg-stone-100"
+                      style={{ color: 'var(--color-accent)' }}
                       onClick={() => { handleLogout(); closeMenu(); }}
                     >
                       Cerrar sesión
@@ -203,7 +212,8 @@ const Navbar = () => {
             ) : (
               <Link
                 to="/login"
-                className="block bg-stone-700 text-white px-4 py-2 rounded hover:bg-stone-800 transition-colors w-fit"
+                className="block px-4 py-2 rounded transition-colors w-fit"
+                style={{ background: 'var(--color-primary)', color: 'var(--color-secondary)' }}
                 onClick={closeMenu}
               >
                 Login

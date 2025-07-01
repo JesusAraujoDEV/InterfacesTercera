@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import UsersList from "../components/admin/UsersList"
 import UserDetails from "../components/admin/UserDetails"
 import UserProfile from "../components/user/UserProfile"
@@ -8,18 +8,21 @@ export default function Dashboard() {
   const [selectedUser, setSelectedUser] = useState(null)
   const [currentUser, setCurrentUser] = useState(null)
   const navigate = useNavigate()
+  const location = useLocation()
 
   useEffect(() => {
-    // Usuario simulado para pruebas
-    const simulatedUser = {
-      id: 1,
-      firstName: "Admin",
-      lastName: "Usuario",
-      email: "admin@test.com",
-      role: "user", // Cambia a "user" para probar la vista de usuario normal
+    // Obtener usuario real del localStorage
+    const storedUser = localStorage.getItem('user')
+    if (storedUser) {
+      setCurrentUser(JSON.parse(storedUser))
+    } else {
+      navigate('/login')
     }
-    setCurrentUser(simulatedUser)
-  }, [])
+  }, [navigate])
+
+  // Detectar si el admin quiere ver la vista de admin
+  const params = new URLSearchParams(location.search)
+  const isAdminView = params.get('view') === 'admin'
 
   if (!currentUser) {
     return (
@@ -36,7 +39,7 @@ export default function Dashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <h1 className="text-2xl font-bold text-gray-900">
-              {currentUser.role === "admin" ? "Panel de Administrador" : "Mi Perfil"}
+              {currentUser.role === "admin" && isAdminView ? "Panel de Administrador" : "Mi Perfil"}
             </h1>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-gray-600">
@@ -45,10 +48,10 @@ export default function Dashboard() {
               <div className="flex space-x-2">
                 <span
                   className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    currentUser.role === "admin" ? "bg-purple-100 text-purple-800" : "bg-blue-100 text-blue-800"
+                    currentUser.role === "admin" && isAdminView ? "bg-purple-100 text-purple-800" : "bg-blue-100 text-blue-800"
                   }`}
                 >
-                  {currentUser.role === "admin" ? "Administrador" : "Usuario"}
+                  {currentUser.role === "admin" && isAdminView ? "Administrador" : "Usuario"}
                 </span>
                 <button
                   onClick={() => navigate("/")}
@@ -64,7 +67,7 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        {currentUser.role === "admin" ? (
+        {currentUser.role === "admin" && isAdminView ? (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Lista de usuarios */}
             <div className="lg:col-span-2">

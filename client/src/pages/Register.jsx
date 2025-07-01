@@ -34,11 +34,25 @@ const Register = () => {
     }
 
     try {
-      //Lógica de registro, si hubiera... 
-      console.log("Register attempt:", formData)
-      //Simular delay de API
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      setSuccess("Account created successfully! Redirecting...")
+      // Separar nombre en firstName y lastName (simple)
+      const [firstName, ...restName] = formData.name.split(' ')
+      const lastName = restName.join(' ')
+      const payload = {
+        firstName: firstName || '',
+        lastName: lastName || '',
+        email: formData.email,
+        password: formData.password
+      }
+      const res = await fetch('http://localhost:3001/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.message || 'Registration failed')
+      }
+      setSuccess("¡Cuenta creada exitosamente! Redirigiendo...")
       setTimeout(() => navigate("/login"), 2000)
     } catch (err) {
       setError(err.message || "Registration failed. Please try again.")

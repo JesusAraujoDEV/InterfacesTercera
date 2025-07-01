@@ -25,8 +25,20 @@ const Login = () => {
     setError("")
 
     try {
-      console.log("Login attempt:", formData)
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      const res = await fetch('http://localhost:3001/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password
+        })
+      })
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.message || 'Invalid credentials')
+      }
+      const user = await res.json()
+      localStorage.setItem('user', JSON.stringify(user))
       navigate("/")
     } catch (err) {
       setError(err.message || "Invalid credentials. Please try again.")

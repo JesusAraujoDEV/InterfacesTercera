@@ -8,7 +8,7 @@ const PORT = 3001;
 app.use(cors());
 app.use(express.json());
 
-const { addPaletteEndpoints } = require('./colores');
+const { addPaletteEndpoints, addFontEndpoints } = require('./colores');
 
 const USERS_FILE = path.join(__dirname, 'users.json');
 
@@ -116,6 +116,7 @@ app.get('/api/users', (req, res) => {
 
 // Agregar endpoints de paleta de colores
 addPaletteEndpoints(app);
+addFontEndpoints(app);
 
 // Servidor escuchando
 app.listen(PORT, () => {

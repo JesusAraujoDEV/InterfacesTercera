@@ -11,12 +11,12 @@ import Portfolio10 from "../assets/portfolio/portfolio10.jpg"
 
 const PortfolioSection = () => {
   return (
-    <section id="portfolio-section" className="px-4 lg:px-8 py-16 relative" style={{ background: 'var(--color-secondary)' }}>
+    <section id="portfolio-section" className="px-4 lg:px-8 py-16 relative" style={{ background: 'var(--color-secondary)', fontFamily: 'var(--font-body)', fontSize: 'var(--font-size-paragraph)' }}>
       {/* Text wrapper start */}
       <div className="flex gap-8 flex-col md:flex-row">
         {/* Main text start */}
-        <h1 className="uppercase text-5xl mb-4 font-semibold" style={{ color: 'var(--color-primary)' }}>OUR PORTFOLIO</h1>
-        <p className="capitalize xl:w-1/2 mb-8" style={{ color: 'var(--color-text)' }}>
+        <h1 style={{ color: 'var(--color-primary)', fontFamily: 'var(--font-title)', fontSize: 'var(--font-size-headline)' }}>OUR PORTFOLIO</h1>
+        <p style={{ color: 'var(--color-text)', fontSize: 'var(--font-size-paragraph)' }}>
           Lorem, ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit dolores distinctio reiciendis
           obcaecati ea.
         </p>

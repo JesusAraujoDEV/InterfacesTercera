@@ -1,7 +1,15 @@
-
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Link } from "react-router-dom"
 import photographerImage from "../../assets/image.jpg"
+import { useFont } from "../../contexts/FontContext"
+
+const DEFAULT_FONTS = {
+  body: "Arial, sans-serif",
+  title: "Georgia, serif",
+  headlineSize: 48,
+  subtitleSize: 24,
+  paragraphSize: 16
+}
 
 const Fonts = () => {
   // Estados para tamaños
@@ -28,6 +36,9 @@ const Fonts = () => {
   const [showUploadModal, setShowUploadModal] = useState(false)
   const [pendingFont, setPendingFont] = useState(null)
 
+  // Estado para modal de confirmación
+  const [showResetModal, setShowResetModal] = useState(false)
+
   // Referencias para inputs de archivo
   const primaryFontInputRef = useRef(null)
   const secondaryFontInputRef = useRef(null)
@@ -45,6 +56,19 @@ const Fonts = () => {
     { name: "Courier New", value: "Courier New, monospace" },
     { name: "Lucida Console", value: "Lucida Console, monospace" },
   ]
+
+  const { fonts, setFonts } = useFont()
+
+  // useEffect para sincronizar cambios manuales
+  useEffect(() => {
+    setFonts({
+      body: bodyFont,
+      title: titleFont,
+      headlineSize,
+      subtitleSize,
+      paragraphSize
+    })
+  }, [bodyFont, titleFont, headlineSize, subtitleSize, paragraphSize])
 
   // FUNCIONES DECLARADAS PRIMERO (antes de usarlas)
   function isActiveFontForType(font) {
@@ -78,8 +102,10 @@ const Fonts = () => {
   function selectFont(font) {
     if (font.type === "title") {
       setTitleFont(font.fontFamily)
+      setFonts({ body: bodyFont, title: font.fontFamily })
     } else {
       setBodyFont(font.fontFamily)
+      setFonts({ body: font.fontFamily, title: titleFont })
     }
   }
 
@@ -397,6 +423,17 @@ const Fonts = () => {
     setFontToDelete(null)
   }
 
+  // Función para restaurar estilos originales
+  function handleResetFonts() {
+    setBodyFont(DEFAULT_FONTS.body)
+    setTitleFont(DEFAULT_FONTS.title)
+    setHeadlineSize(DEFAULT_FONTS.headlineSize)
+    setSubtitleSize(DEFAULT_FONTS.subtitleSize)
+    setParagraphSize(DEFAULT_FONTS.paragraphSize)
+    setFonts(DEFAULT_FONTS)
+    setShowResetModal(false)
+  }
+
   return (
     <section className="min-h-screen px-4 sm:px-6 md:px-10 lg:px-24 py-12 sm:py-16 bg-gradient-to-br from-stone-50 to-stone-200 text-stone-800 font-sans relative">
       <div className="absolute inset-0 overflow-hidden opacity-10 -z-10">
@@ -420,6 +457,12 @@ const Fonts = () => {
         <h1 className="uppercase text-3xl sm:text-4xl md:text-5xl font-extrabold text-center text-stone-900 leading-tight">
           Configuración de Fuentes
         </h1>
+      </div>
+
+      <div className="mb-8 p-4 rounded-lg shadow bg-white border border-stone-200 flex flex-col items-center">
+        <div className="text-lg font-bold mb-2">Fuente principal (body): <span className="font-mono text-blue-700">{getBodyFontName()}</span></div>
+        <div className="text-lg font-bold mb-2">Fuente secundaria (títulos): <span className="font-mono text-green-700">{getTitleFontName()}</span></div>
+        <div className="text-base">Tamaños: <span className="font-mono">Título: {headlineSize}px</span>, <span className="font-mono">Subtítulo: {subtitleSize}px</span>, <span className="font-mono">Párrafo: {paragraphSize}px</span></div>
       </div>
 
       {/* Vista previa de fuentes */}
@@ -805,6 +848,20 @@ const Fonts = () => {
                 <i className="fas fa-times mr-2"></i>
                 Cancelar
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de confirmación para restaurar estilos originales */}
+      {showResetModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <h3 className="text-lg font-bold mb-4">¿Restaurar estilos originales?</h3>
+            <p className="mb-6">Esto restablecerá las fuentes y tamaños a los valores originales de la plantilla. ¿Deseas continuar?</p>
+            <div className="flex justify-end gap-3">
+              <button onClick={() => setShowResetModal(false)} className="px-4 py-2 bg-stone-200 text-stone-800 rounded hover:bg-stone-300">Cancelar</button>
+              <button onClick={handleResetFonts} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Restaurar</button>
             </div>
           </div>
         </div>

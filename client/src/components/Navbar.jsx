@@ -66,13 +66,13 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 shadow-sm" style={{ background: 'var(--color-secondary)', color: 'var(--color-text)', backdropFilter: 'blur(4px)' }}>
+    <nav className="fixed top-0 left-0 right-0 z-50 shadow-sm" style={{ background: 'var(--color-secondary)', color: 'var(--color-text)', backdropFilter: 'blur(4px)', fontFamily: 'var(--font-body)', fontSize: 'var(--font-size-paragraph)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Brand */}
           <Link to="/" className="flex flex-col">
-            <span className="text-sm font-bold tracking-wider" style={{ color: 'var(--color-primary)' }}>LANDING</span>
-            <span className="text-xs font-light tracking-wider" style={{ color: 'var(--color-accent)' }}>PHOTOGRAPHY</span>
+            <span className="text-sm font-bold tracking-wider" style={{ color: 'var(--color-primary)', fontFamily: 'var(--font-title)', fontSize: 'var(--font-size-headline)' }}>LANDING</span>
+            <span className="text-xs font-light tracking-wider" style={{ color: 'var(--color-accent)', fontFamily: 'var(--font-title)', fontSize: 'var(--font-size-subtitle)' }}>PHOTOGRAPHY</span>
           </Link>
 
           {/* Desktop Menu */}

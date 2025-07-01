@@ -2,13 +2,13 @@ import photographerImage from "../assets/image.jpg"
 
 const MainSection = () => {
   return (
-    <section className="min-h-screen flex items-center justify-center px-4 py-20" style={{ background: 'var(--color-secondary)' }}>
+    <section className="min-h-screen flex items-center justify-center px-4 py-20" style={{ background: 'var(--color-secondary)', fontFamily: 'var(--font-body)', fontSize: 'var(--font-size-paragraph)' }}>
       <div className="max-w-7xl mx-auto w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Text Content */}
           <div className="text-center lg:text-left space-y-8">
             {/* Main Heading */}
-            <h1 className="text-5xl lg:text-7xl font-bold uppercase leading-tight" style={{ color: 'var(--color-primary)' }}>
+            <h1 style={{ color: 'var(--color-primary)', fontFamily: 'var(--font-title)', fontSize: 'var(--font-size-headline)' }}>
               Capturing
               <br />
               Beauty 
@@ -17,7 +17,7 @@ const MainSection = () => {
             </h1>
 
             {/* Description */}
-            <p className="text-lg max-w-lg mx-auto lg:mx-0" style={{ color: 'var(--color-text)' }}>
+            <p style={{ color: 'var(--color-text)', fontSize: 'var(--font-size-paragraph)' }}>
               A camera is an optical instrument that captures a visual image at their most basic, cameras are sealed
             </p>
 

@@ -21,9 +21,9 @@ const ContactSection = () => {
   }
 
   return (
-    <section id="contact-section" className="px-12 lg:px-32 py-16 relative" style={{ background: 'var(--color-secondary)' }}>
+    <section id="contact-section" className="px-12 lg:px-32 py-16 relative" style={{ background: 'var(--color-secondary)', fontFamily: 'var(--font-body)', fontSize: 'var(--font-size-paragraph)' }}>
       {/* Main text start */}
-      <h1 className="uppercase text-5xl mb-4 font-semibold" style={{ color: 'var(--color-primary)' }}>Contact us</h1>
+      <h1 style={{ color: 'var(--color-primary)', fontFamily: 'var(--font-title)', fontSize: 'var(--font-size-headline)' }}>Contact us</h1>
       {/* Main text end */}
 
       {/* Form start */}
@@ -33,7 +33,7 @@ const ContactSection = () => {
         </div>
         <div className="flex flex-col w-full items-center">
           <div className="flex flex-col items-center w-full max-w-xs px-2 mb-6">
-            <p className="text-xs sm:text-sm mt-2" style={{ color: 'var(--color-text)' }}>E-mail address</p>
+            <p style={{ color: 'var(--color-text)', fontSize: 'var(--font-size-subtitle)' }}>E-mail address</p>
             <input
               type="email"
               name="email"
@@ -47,7 +47,7 @@ const ContactSection = () => {
             />
           </div>
 
-          <p className="text-xs sm:text-sm mt-2" style={{ color: 'var(--color-text)' }}>Message</p>
+          <p style={{ color: 'var(--color-text)', fontSize: 'var(--font-size-subtitle)' }}>Message</p>
           <div className="flex flex-col items-center w-full max-w-xs px-2 mb-6">
             <textarea
               name="message"

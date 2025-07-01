@@ -85,11 +85,11 @@ const ImageCarousel = () => {
   }, [swiper])
 
   return (
-    <div className="image-carousel-container px-4 lg:px-8 py-16 relative overflow-x-hidden max-w-full" style={{ background: 'var(--color-secondary)' }}>
+    <div className="image-carousel-container px-4 lg:px-8 py-16 relative overflow-x-hidden max-w-full" style={{ background: 'var(--color-secondary)', fontFamily: 'var(--font-body)', fontSize: 'var(--font-size-paragraph)' }}>
       {/* Título del carrusel */}
       <div className="text-center mb-12">
-        <h2 className="uppercase text-4xl lg:text-5xl font-semibold mb-4" style={{ color: 'var(--color-primary)' }}>Featured Gallery</h2>
-        <p className="max-w-2xl mx-auto" style={{ color: 'var(--color-text)' }}>
+        <h2 style={{ color: 'var(--color-primary)', fontFamily: 'var(--font-title)', fontSize: 'var(--font-size-headline)' }}>Featured Gallery</h2>
+        <p style={{ color: 'var(--color-text)' }}>
           Explore our most stunning photography work through this interactive gallery
         </p>
       </div>
@@ -148,8 +148,8 @@ const ImageCarousel = () => {
                 {/* Overlay con información */}
                 <div className="absolute inset-0 transition-opacity duration-300" style={{ background: 'linear-gradient(to top, var(--color-primary), transparent 80%)', opacity: 0 }}>
                   <div className="absolute bottom-0 left-0 right-0 p-6" style={{ color: 'var(--color-secondary)' }}>
-                    <h3 className="text-xl lg:text-2xl font-semibold mb-2">{image.title}</h3>
-                    <p className="text-sm lg:text-base opacity-90">{image.description}</p>
+                    <h3 style={{ fontFamily: 'var(--font-title)', fontSize: 'var(--font-size-subtitle)' }}>{image.title}</h3>
+                    <p style={{ fontSize: 'var(--font-size-paragraph)' }}>{image.description}</p>
                   </div>
                 </div>
 

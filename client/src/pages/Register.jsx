@@ -34,16 +34,12 @@ const Register = () => {
     }
 
     try {
-      // Separar nombre en firstName y lastName (simple)
-      const [firstName, ...restName] = formData.name.split(' ')
-      const lastName = restName.join(' ')
       const payload = {
-        firstName: firstName || '',
-        lastName: lastName || '',
         email: formData.email,
-        password: formData.password
+        password: formData.password,
+        name: formData.name,
       }
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/register`, {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/users/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

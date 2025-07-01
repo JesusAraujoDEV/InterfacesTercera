@@ -123,7 +123,10 @@ const Colors = () => {
 
   // Al cargar, obtener paletas personalizadas del backend
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/palettes`)
+    const token = localStorage.getItem("token");
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/palettes`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined
+    })
       .then(res => res.json())
       .then(data => {
         setPalettes([...defaultPalettes, ...data.map(p => ({
@@ -149,9 +152,13 @@ const Colors = () => {
     setPalette(palette.colors)
     setActivePaletteId(palette.id)
     // Guardar la paleta activa en el backend
+    const token = localStorage.getItem("token");
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/palette`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {})
+      },
       body: JSON.stringify({ ...palette.colors, name: palette.name, id: palette.id, createdAt: palette.createdAt })
     })
   }
@@ -182,9 +189,13 @@ const Colors = () => {
       text: textColor,
       neutral: neutralColor,
     }
+    const token = localStorage.getItem("token");
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/palettes`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {})
+      },
       body: JSON.stringify(newPalette)
     })
       .then(res => res.json())

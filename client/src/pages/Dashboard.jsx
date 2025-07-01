@@ -11,14 +11,29 @@ export default function Dashboard() {
   const location = useLocation()
 
   useEffect(() => {
-    // Obtener usuario real del localStorage
-    const storedUser = localStorage.getItem('user')
-    if (storedUser) {
-      setCurrentUser(JSON.parse(storedUser))
-    } else {
-      navigate('/login')
-    }
-  }, [navigate])
+    const fetchProfile = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/login');
+        return;
+      }
+      try {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/users/profile`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        if (!res.ok) {
+          throw new Error('No autorizado');
+        }
+        const data = await res.json();
+        setCurrentUser(data);
+      } catch {
+        navigate('/login');
+      }
+    };
+    fetchProfile();
+  }, [navigate]);
 
   // Detectar si el admin quiere ver la vista de admin
   const params = new URLSearchParams(location.search)
@@ -43,7 +58,7 @@ export default function Dashboard() {
             </h1>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-gray-600">
-                Bienvenido, {currentUser.firstName} {currentUser.lastName}
+                Bienvenido, {currentUser.firstName || ''} {currentUser.lastName || ''}
               </span>
               <div className="flex space-x-2">
                 <span

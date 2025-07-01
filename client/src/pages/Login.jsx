@@ -1,70 +1,79 @@
-import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     rememberMe: false,
-  })
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
-  const navigate = useNavigate()
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target
+    const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
-    }))
-  }
+    }));
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setError("")
+    e.preventDefault();
+    setLoading(true);
+    setError("");
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: formData.email,
-          password: formData.password
-        })
-      })
+          password: formData.password,
+        }),
+      });
       if (!res.ok) {
-        const data = await res.json()
-        throw new Error(data.message || 'Invalid credentials')
+        const data = await res.json();
+        throw new Error(data.message || "Invalid credentials");
       }
-      const user = await res.json()
-      localStorage.setItem('user', JSON.stringify(user))
-      navigate("/")
+      const { user, token } = await res.json();
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", token);
+      navigate("/");
     } catch (err) {
-      setError(err.message || "Invalid credentials. Please try again.")
+      setError(err.message || "Invalid credentials. Please try again.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <section className="relative h-screen w-screen overflow-hidden bg-stone-100 flex items-center justify-center">
-
       <div className="w-full max-w-md bg-white rounded-lg shadow-xl p-12 max-md:p-10 max-md:w-[80%]">
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold uppercase tracking-widest text-stone-800">LANDING</h1>
-          <p className="text-2xl font-light uppercase tracking-widest text-stone-600">PHOTOGRAPHY</p>
+          <h1 className="text-3xl font-bold uppercase tracking-widest text-stone-800">
+            LANDING
+          </h1>
+          <p className="text-2xl font-light uppercase tracking-widest text-stone-600">
+            PHOTOGRAPHY
+          </p>
         </div>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
-            <h2 className="text-2xl font-semibold text-stone-800">Welcome Back</h2>
+            <h2 className="text-2xl font-semibold text-stone-800">
+              Welcome Back
+            </h2>
             <p className="text-sm text-stone-500">Sign in to your account</p>
           </div>
 
           <div className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-stone-600 mb-1">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-stone-600 mb-1"
+              >
                 Email
               </label>
               <input
@@ -80,7 +89,10 @@ const Login = () => {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-stone-600 mb-1">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-stone-600 mb-1"
+              >
                 Password
               </label>
               <input
@@ -119,20 +131,26 @@ const Login = () => {
             {loading ? "Signing In..." : "Sign In"}
           </button>
 
-          <Link to="/" className="block text-center text-stone-600 hover:text-stone-800 mt-4 hover:underline">
+          <Link
+            to="/"
+            className="block text-center text-stone-600 hover:text-stone-800 mt-4 hover:underline"
+          >
             Volver a la página principal
           </Link>
 
           <p className="text-center text-sm text-stone-600">
             {"Don't have an account? "}
-            <Link to="/register" className="font-medium text-stone-800 hover:text-stone-900">
+            <Link
+              to="/register"
+              className="font-medium text-stone-800 hover:text-stone-900"
+            >
               Sign up
             </Link>
           </p>
         </form>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

@@ -13,17 +13,17 @@ const Footer = () => {
   return (
     <footer
       className="photography-footer"
-      style={{ background: 'var(--color-primary)', color: 'var(--color-text)', fontFamily: 'var(--font-body)', fontSize: 'var(--font-size-paragraph)' }}
+      style={{ background: 'var(--color-primary)', color: 'var(--color-text)' }}
     >
       {/* Main Footer Content */}
       <div className="footer-container" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '2rem', padding: '3rem 2rem 2rem 2rem', background: 'var(--color-primary)', color: 'var(--color-text)' }}>
         {/* Brand Information */}
         <div className="footer-brand" style={{ flex: '1 1 220px', minWidth: 220, marginBottom: '2rem' }}>
           <div className="brand-title" style={{ marginBottom: '0.5rem' }}>
-            <p style={{ fontWeight: 700, letterSpacing: 2, color: 'var(--color-accent)', fontFamily: 'var(--font-title)', fontSize: 'var(--font-size-headline)' }}>PHOTOGRAPHY</p>
-            <p style={{ fontWeight: 500, color: 'var(--color-neutral)', fontFamily: 'var(--font-title)', fontSize: 'var(--font-size-subtitle)' }}>BY LANDING</p>
+            <p className="brand-main" style={{ fontWeight: 700, fontSize: '1.5rem', letterSpacing: 2, color: 'var(--color-accent)' }}>PHOTOGRAPHY</p>
+            <p className="brand-sub" style={{ fontWeight: 500, fontSize: '1.1rem', color: 'var(--color-neutral)' }}>BY LANDING</p>
           </div>
-          <p style={{ color: 'var(--color-text)', marginBottom: '1rem', fontSize: 'var(--font-size-paragraph)' }}>Capturing special moments with art and passion.</p>
+          <p className="brand-description" style={{ color: 'var(--color-text)', marginBottom: '1rem' }}>Capturing special moments with art and passion.</p>
 
           <div className="social-links" style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
             <a href="#" className="social-icon" aria-label="Instagram" style={{ color: 'var(--color-accent)', fontSize: '1.5rem', transition: 'color 0.2s' }}>
@@ -43,7 +43,7 @@ const Footer = () => {
 
         {/* Quick Links */}
         <div className="footer-section" style={{ flex: '1 1 180px', minWidth: 180, marginBottom: '2rem' }}>
-          <h3 style={{ color: 'var(--color-accent)', fontWeight: 600, marginBottom: '1rem', fontFamily: 'var(--font-title)', fontSize: 'var(--font-size-headline)' }}>Quick Links</h3>
+          <h3 className="section-title" style={{ color: 'var(--color-accent)', fontWeight: 600, marginBottom: '1rem' }}>Quick Links</h3>
           <ul className="footer-links" style={{ listStyle: 'none', padding: 0 }}>
             <li><a href="#" className="footer-link" style={{ color: 'var(--color-text)', textDecoration: 'none', display: 'block', marginBottom: 6, transition: 'color 0.2s' }}>Home</a></li>
             <li><a href="#" className="footer-link" style={{ color: 'var(--color-text)', textDecoration: 'none', display: 'block', marginBottom: 6, transition: 'color 0.2s' }}>Portfolio</a></li>
@@ -56,7 +56,7 @@ const Footer = () => {
 
         {/* Services */}
         <div className="footer-section" style={{ flex: '1 1 180px', minWidth: 180, marginBottom: '2rem' }}>
-          <h3 style={{ color: 'var(--color-accent)', fontWeight: 600, marginBottom: '1rem', fontFamily: 'var(--font-title)', fontSize: 'var(--font-size-headline)' }}>Services</h3>
+          <h3 className="section-title" style={{ color: 'var(--color-accent)', fontWeight: 600, marginBottom: '1rem' }}>Services</h3>
           <ul className="footer-links" style={{ listStyle: 'none', padding: 0 }}>
             <li><a href="#" className="footer-link" style={{ color: 'var(--color-text)', textDecoration: 'none', display: 'block', marginBottom: 6, transition: 'color 0.2s' }}>Wedding Photography</a></li>
             <li><a href="#" className="footer-link" style={{ color: 'var(--color-text)', textDecoration: 'none', display: 'block', marginBottom: 6, transition: 'color 0.2s' }}>Portrait Sessions</a></li>
@@ -69,7 +69,7 @@ const Footer = () => {
 
         {/* Contact Information */}
         <div className="footer-section" style={{ flex: '1 1 220px', minWidth: 220, marginBottom: '2rem' }}>
-          <h3 style={{ color: 'var(--color-accent)', fontWeight: 600, marginBottom: '1rem', fontFamily: 'var(--font-title)', fontSize: 'var(--font-size-headline)' }}>Contact Us</h3>
+          <h3 className="section-title" style={{ color: 'var(--color-accent)', fontWeight: 600, marginBottom: '1rem' }}>Contact Us</h3>
           <address className="contact-info" style={{ fontStyle: 'normal', color: 'var(--color-text)' }}>
             <div className="contact-item" style={{ display: 'flex', alignItems: 'center', marginBottom: 6 }}>
               <i className="fas fa-map-marker-alt contact-icon" style={{ color: 'var(--color-neutral)', marginRight: 8 }}></i>
@@ -91,7 +91,7 @@ const Footer = () => {
 
           {/* Newsletter Subscription */}
           <div className="newsletter" style={{ marginTop: '1.5rem' }}>
-            <h4 style={{ color: 'var(--color-accent)', fontWeight: 500, marginBottom: 8, fontFamily: 'var(--font-title)', fontSize: 'var(--font-size-subtitle)' }}>Subscribe to our newsletter</h4>
+            <h4 className="newsletter-title" style={{ color: 'var(--color-accent)', fontWeight: 500, marginBottom: 8 }}>Subscribe to our newsletter</h4>
             <form className="newsletter-form" onSubmit={handleNewsletterSubmit} style={{ display: 'flex', gap: 8 }}>
               <input
                 type="email"
@@ -147,11 +147,11 @@ const Footer = () => {
       {/* Copyright and Legal */}
       <div className="copyright-section" style={{ background: 'var(--color-accent)', color: 'var(--color-text)', padding: '1rem 2rem' }}>
         <div className="copyright-container" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
-          <div style={{ fontSize: 'var(--font-size-paragraph)', color: 'var(--color-text)' }}>&copy; {currentYear} Landing Photography. All rights reserved.</div>
+          <div className="copyright-text" style={{ fontSize: '1rem', color: 'var(--color-text)' }}>&copy; {currentYear} Landing Photography. All rights reserved.</div>
           <div className="legal-links" style={{ display: 'flex', gap: '1.5rem' }}>
-            <a href="#" className="legal-link" style={{ color: 'var(--color-text)', textDecoration: 'underline', fontSize: 'var(--font-size-paragraph)' }}>Privacy Policy</a>
-            <a href="#" className="legal-link" style={{ color: 'var(--color-text)', textDecoration: 'underline', fontSize: 'var(--font-size-paragraph)' }}>Terms of Service</a>
-            <a href="#" className="legal-link" style={{ color: 'var(--color-text)', textDecoration: 'underline', fontSize: 'var(--font-size-paragraph)' }}>Cookie Policy</a>
+            <a href="#" className="legal-link" style={{ color: 'var(--color-text)', textDecoration: 'underline', fontSize: '1rem' }}>Privacy Policy</a>
+            <a href="#" className="legal-link" style={{ color: 'var(--color-text)', textDecoration: 'underline', fontSize: '1rem' }}>Terms of Service</a>
+            <a href="#" className="legal-link" style={{ color: 'var(--color-text)', textDecoration: 'underline', fontSize: '1rem' }}>Cookie Policy</a>
           </div>
         </div>
       </div>

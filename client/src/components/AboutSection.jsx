@@ -1,9 +1,9 @@
 const AboutSection = () => {
   return (
-    <section id="about-section" className="px-12 lg:px-32 py-16 border-t relative" style={{ borderColor: 'var(--color-accent)', background: 'var(--color-secondary)', fontFamily: 'var(--font-body)', fontSize: 'var(--font-size-paragraph)' }}>
+    <section id="about-section" className="px-12 lg:px-32 py-16 border-t relative" style={{ borderColor: 'var(--color-accent)', background: 'var(--color-secondary)' }}>
       {/* Main text start */}
-      <h1 style={{ color: 'var(--color-primary)', fontFamily: 'var(--font-title)', fontSize: 'var(--font-size-headline)' }}>ABOUT US</h1>
-      <p style={{ color: 'var(--color-text)', fontSize: 'var(--font-size-paragraph)' }}>
+      <h1 className="uppercase text-5xl mb-4 font-semibold" style={{ color: 'var(--color-primary)' }}>ABOUT US</h1>
+      <p className="capitalize xl:w-1/2 mb-8" style={{ color: 'var(--color-text)' }}>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati sint quia quos, nesciunt id esse magnam
         facere eveniet ea laborum minus illo earum! Dolorum repellat eos, quod tempora omnis magni blanditiis eligendi
         nesciunt aut sapiente nemo distinctio placeat voluptas facilis deserunt quaerat, voluptatem hic accusamus dicta,

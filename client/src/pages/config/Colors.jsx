@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { useColor } from "../../contexts/ColorContext"
 import photographerImage from "../../assets/image.jpg"
@@ -123,7 +123,7 @@ const Colors = () => {
 
   // Al cargar, obtener paletas personalizadas del backend
   useEffect(() => {
-    fetch('http://localhost:3001/api/palettes')
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/palettes`)
       .then(res => res.json())
       .then(data => {
         setPalettes([...defaultPalettes, ...data.map(p => ({
@@ -149,7 +149,7 @@ const Colors = () => {
     setPalette(palette.colors)
     setActivePaletteId(palette.id)
     // Guardar la paleta activa en el backend
-    fetch('http://localhost:3001/api/palette', {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/palette`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...palette.colors, name: palette.name, id: palette.id, createdAt: palette.createdAt })
@@ -182,7 +182,7 @@ const Colors = () => {
       text: textColor,
       neutral: neutralColor,
     }
-    fetch('http://localhost:3001/api/palettes', {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/palettes`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newPalette)

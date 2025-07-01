@@ -32,7 +32,7 @@ export function ColorProvider({ children }) {
 
   // Al iniciar, obtener la paleta activa del backend
   useEffect(() => {
-    fetch('http://localhost:3001/api/palette')
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/palette`)
       .then(res => res.json())
       .then(data => {
         setPalette(data)

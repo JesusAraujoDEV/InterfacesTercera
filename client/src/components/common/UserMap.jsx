@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 
-export default function UserMap({ latitude, longitude, userName }) {
+export default function UserMap({ latitude, longitude, userName, onMarkerMove, enableMarkerMove }) {
   const mapRef = useRef(null)
   const mapInstanceRef = useRef(null)
   const containerIdRef = useRef(`map-${Math.random().toString(36).substr(2, 9)}`)
@@ -123,7 +123,7 @@ export default function UserMap({ latitude, longitude, userName }) {
         })
 
         // Agregar marcador
-        const marker = window.L.marker([validLat, validLng], { icon: customIcon }).addTo(map)
+        const marker = window.L.marker([validLat, validLng], { icon: customIcon, draggable: !!enableMarkerMove }).addTo(map)
 
         const popupContent = isUsingDefault
           ? `<div style="text-align: center; padding: 8px;">
@@ -143,6 +143,14 @@ export default function UserMap({ latitude, longitude, userName }) {
             </div>`
 
         marker.bindPopup(popupContent).openPopup()
+
+        // Si el marcador es arrastrable, escuchar el evento dragend
+        if (enableMarkerMove && typeof onMarkerMove === 'function') {
+          marker.on('dragend', function (e) {
+            const { lat, lng } = e.target.getLatLng()
+            onMarkerMove(Number(lat.toFixed(6)), Number(lng.toFixed(6)))
+          })
+        }
 
         mapInstanceRef.current = map
 
@@ -176,7 +184,7 @@ export default function UserMap({ latitude, longitude, userName }) {
         mapInstanceRef.current = null
       }
     }
-  }, [validLat, validLng, userName, isUsingDefault])
+  }, [validLat, validLng, userName, isUsingDefault, enableMarkerMove, onMarkerMove])
 
   if (mapError) {
     return (

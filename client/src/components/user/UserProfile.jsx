@@ -224,6 +224,24 @@ export default function UserProfile({ user, status }) {
                           CP: {user.address.postalCode}
                         </>
                       )}
+                      {user.address?.stateCode && (
+                        <>
+                          <br />
+                          Estado: {user.address.stateCode}
+                        </>
+                      )}
+                      {user.address?.country && (
+                        <>
+                          <br />
+                          País: {user.address.country}
+                        </>
+                      )}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Dirección MAC</label>
+                    <p className="mt-1 text-sm text-gray-900">
+                      {user.macAddress || "No especificado"}
                     </p>
                   </div>
                 </div>

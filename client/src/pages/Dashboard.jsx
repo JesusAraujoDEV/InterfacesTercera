@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom"
 import UsersList from "../components/admin/UsersList"
 import UserDetails from "../components/admin/UserDetails"
 import UserProfile from "../components/user/UserProfile"
+import UserMap from "../components/common/UserMap"
 
 export default function Dashboard() {
   const [selectedUser, setSelectedUser] = useState(null)
@@ -139,6 +140,16 @@ export default function Dashboard() {
         ) : (
           <div className="max-w-4xl mx-auto">
             <UserProfile user={currentUser} status={userStatus} />
+            {/* Mostrar mapa si hay coordenadas */}
+            {currentUser?.address?.coordinates?.lat && currentUser?.address?.coordinates?.lng && (
+              <div className="mt-8">
+                <UserMap
+                  latitude={parseFloat(currentUser.address.coordinates.lat)}
+                  longitude={parseFloat(currentUser.address.coordinates.lng)}
+                  userName={`${currentUser.firstName || ''} ${currentUser.lastName || ''}`.trim() || currentUser.email}
+                />
+              </div>
+            )}
           </div>
         )}
       </main>

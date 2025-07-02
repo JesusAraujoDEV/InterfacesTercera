@@ -1,7 +1,6 @@
 import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
 
-const Register = () => {
+export default function UserCreateModal({ open, onClose, onSuccess }) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -11,7 +10,8 @@ const Register = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
-  const navigate = useNavigate()
+
+  if (!open) return null
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -55,8 +55,12 @@ const Register = () => {
         const data = await res.json()
         throw new Error(data.message || 'Registration failed')
       }
-      setSuccess("¡Cuenta creada exitosamente! Redirigiendo...")
-      setTimeout(() => navigate("/login"), 2000)
+      setSuccess("¡Cuenta creada exitosamente!")
+      setTimeout(() => {
+        if (onSuccess) onSuccess();
+        onClose();
+        window.location.reload();
+      }, 1200)
     } catch (err) {
       setError(err.message || "Registration failed. Please try again.")
     } finally {
@@ -65,20 +69,25 @@ const Register = () => {
   }
 
   return (
-    <section className="relative h-screen w-screen overflow-hidden bg-stone-100 flex items-center justify-center">
-
-      <div className="w-full max-w-md bg-white rounded-lg shadow-xl p-12 max-md:w-[80%]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
+      <div className="w-full max-w-md bg-white rounded-lg shadow-xl p-12 max-md:w-[80%] relative animate-fade-in">
+        {/* Botón cerrar */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-2xl font-bold focus:outline-none"
+          aria-label="Cerrar"
+        >
+          ×
+        </button>
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold uppercase tracking-widest text-stone-800">LANDING</h1>
           <p className="text-2xl font-light uppercase tracking-widest text-stone-600">PHOTOGRAPHY</p>
         </div>
-
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
-            <h2 className="text-2xl font-semibold text-stone-800">Create an Account</h2>
-            <p className="text-sm text-stone-500">Sign up to get started</p>
+            <h2 className="text-2xl font-semibold text-stone-800">Crear Usuario</h2>
+            <p className="text-sm text-stone-500">Completa los datos para crear un usuario</p>
           </div>
-
           <div className="space-y-4">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-stone-600 mb-1">
@@ -95,7 +104,6 @@ const Register = () => {
                 required
               />
             </div>
-
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-stone-600 mb-1">
                 Email
@@ -111,7 +119,6 @@ const Register = () => {
                 required
               />
             </div>
-
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-stone-600 mb-1">
                 Password
@@ -127,7 +134,6 @@ const Register = () => {
                 required
               />
             </div>
-
             <div>
               <label htmlFor="confirm-password" className="block text-sm font-medium text-stone-600 mb-1">
                 Confirm Password
@@ -144,32 +150,17 @@ const Register = () => {
               />
             </div>
           </div>
-
           {error && <p className="text-red-500 text-sm text-center">{error}</p>}
           {success && <p className="text-green-600 text-sm text-center">{success}</p>}
-
           <button
             type="submit"
             disabled={loading}
             className="w-full bg-stone-700 text-white py-3 rounded hover:bg-stone-800 transition transform hover:-translate-y-0.5 shadow-md px-4 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? "Creating Account..." : "Register"}
+            {loading ? "Creando..." : "Crear Usuario"}
           </button>
-
-          <Link to="/" className="block text-center text-stone-600 hover:text-stone-800 mt-4 hover:underline">
-            Volver a la página principal
-          </Link>
-
-          <p className="text-center text-sm text-stone-600">
-            Already have an account?{" "}
-            <Link to="/login" className="font-medium text-stone-800 hover:text-stone-900">
-              Sign in
-            </Link>
-          </p>
         </form>
       </div>
-    </section>
+    </div>
   )
-}
-
-export default Register
+} 

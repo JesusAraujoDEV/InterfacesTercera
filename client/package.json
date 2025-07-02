@@ -11,6 +11,11 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "datatables.net-buttons-dt": "^3.2.3",
+    "datatables.net-dt": "^2.3.2",
+    "datatables.net-react": "^1.0.1",
+    "jszip": "^3.10.1",
+    "pdfmake": "^0.2.20",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.2",

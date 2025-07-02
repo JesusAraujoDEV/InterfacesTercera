@@ -3,34 +3,89 @@ import UserIcon from "../../assets/icons/user1.svg"
 import HealthIcon from "../../assets/icons/run1.svg"
 import WorkIcon from "../../assets/icons/work1.svg"
 import LocationIcon from "../../assets/icons/location.svg"
+import BankIcon from "../../assets/icons/bank.png"
+import TechIcon from "../../assets/icons/tech.png"
+import CryptoIcon from "../../assets/icons/wallet.png"
+import UserMap from "../common/UserMap"
 
-export default function ProfileWizard({ user, onCancel }) {
+
+export default function ProfileWizardExpanded({ user, onSave, onCancel }) {
   const [currentStep, setCurrentStep] = useState(1)
   const [formData, setFormData] = useState({
+    // Información Personal
     firstName: user?.firstName || "",
     lastName: user?.lastName || "",
+    maidenName: user?.maidenName || "",
     email: user?.email || "",
     phone: user?.phone || "",
+    username: user?.username || "",
+    password: user?.password || "",
     birthDate: user?.birthDate || "",
+    age: user?.age || "",
     gender: user?.gender || "",
+    image: user?.image || "",
+
+    // Información Física
     height: user?.height || "",
     weight: user?.weight || "",
     bloodGroup: user?.bloodGroup || "",
     eyeColor: user?.eyeColor || "",
     hairColor: user?.hair?.color || "",
+    hairType: user?.hair?.type || "",
+
+    // Información Académica/Profesional
     university: user?.university || "",
     company: user?.company?.name || "",
     department: user?.company?.department || "",
     title: user?.company?.title || "",
+
+    // Dirección Personal
     address: user?.address?.address || "",
     city: user?.address?.city || "",
     state: user?.address?.state || "",
+    stateCode: user?.address?.stateCode || "",
     postalCode: user?.address?.postalCode || "",
+    country: user?.address?.country || "",
     coordinates: {
       lat: user?.address?.coordinates?.lat || "",
       lng: user?.address?.coordinates?.lng || "",
     },
-    image: user?.image || "",
+
+    // Dirección de la Empresa
+    companyAddress: user?.company?.address?.address || "",
+    companyCity: user?.company?.address?.city || "",
+    companyState: user?.company?.address?.state || "",
+    companyStateCode: user?.company?.address?.stateCode || "",
+    companyPostalCode: user?.company?.address?.postalCode || "",
+    companyCountry: user?.company?.address?.country || "",
+    companyCoordinates: {
+      lat: user?.company?.address?.coordinates?.lat || "",
+      lng: user?.company?.address?.coordinates?.lng || "",
+    },
+
+    // Información Bancaria
+    cardExpire: user?.bank?.cardExpire || "",
+    cardNumber: user?.bank?.cardNumber || "",
+    cardType: user?.bank?.cardType || "",
+    currency: user?.bank?.currency || "",
+    iban: user?.bank?.iban || "",
+
+    // Información Legal/Fiscal
+    ein: user?.ein || "",
+    ssn: user?.ssn || "",
+
+    // Información Técnica
+    ip: user?.ip || "",
+    macAddress: user?.macAddress || "",
+    userAgent: user?.userAgent || "",
+
+    // Criptomonedas
+    cryptoCoin: user?.crypto?.coin || "",
+    cryptoWallet: user?.crypto?.wallet || "",
+    cryptoNetwork: user?.crypto?.network || "",
+
+    // Sistema
+    role: user?.role || "",
   })
 
   const [errors, setErrors] = useState({})
@@ -57,11 +112,42 @@ export default function ProfileWizard({ user, onCancel }) {
     },
     {
       id: 4,
-      title: "Dirección y Ubicación",
-      description: "Datos de ubicación",
+      title: "Dirección Personal",
+      description: "Ubicación de residencia",
       icon: LocationIcon,
     },
+    {
+      id: 5,
+      title: "Información Bancaria",
+      description: "Datos financieros",
+      icon: BankIcon,
+    },
+    {
+      id: 6,
+      title: "Información Técnica",
+      description: "Datos técnicos y legales",
+      icon: TechIcon,
+    },
+    {
+      id: 7,
+      title: "Criptomonedas y Sistema",
+      description: "Crypto y configuración",
+      icon: CryptoIcon,
+    },
   ]
+
+  // Función para calcular edad automáticamente
+  const calculateAge = (birthDate) => {
+    if (!birthDate) return ""
+    const today = new Date()
+    const birth = new Date(birthDate)
+    let age = today.getFullYear() - birth.getFullYear()
+    const monthDiff = today.getMonth() - birth.getMonth()
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+      age--
+    }
+    return age
+  }
 
   const validateStep = (step) => {
     const newErrors = {}
@@ -74,9 +160,6 @@ export default function ProfileWizard({ user, onCancel }) {
         else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(formData.email)) newErrors.email = "Email inválido"
         if (!formData.phone.trim()) newErrors.phone = "El teléfono es requerido"
         else if (!/^\+\d{7,15}$/.test(formData.phone.replace(/\s/g, ''))) newErrors.phone = "El teléfono debe tener formato internacional, ej: +584144019911"
-        break
-
-      case 2:
         if (!formData.birthDate) newErrors.birthDate = "La fecha de nacimiento es requerida"
         else {
           const birthDate = new Date(formData.birthDate)
@@ -85,12 +168,19 @@ export default function ProfileWizard({ user, onCancel }) {
           if (age < 0 || age > 150) newErrors.birthDate = "La edad debe estar entre 0 y 150 años"
         }
         if (!formData.gender) newErrors.gender = "El género es requerido"
+        if (formData.username && (formData.username.length < 3 || formData.username.length > 30)) newErrors.username = "El nombre de usuario debe tener entre 3 y 30 caracteres"
+        if (formData.password && formData.password.length < 6) newErrors.password = "La contraseña debe tener al menos 6 caracteres"
+        break
+
+      case 2:
         if (!formData.height || Number(formData.height) <= 0) newErrors.height = "La altura debe ser un número positivo"
         if (!formData.weight || Number(formData.weight) <= 0) newErrors.weight = "El peso debe ser un número positivo"
+        // bloodGroup, eyeColor, hairColor, hairType are optional selects, no direct validation for "required"
         break
 
       case 3:
         if (formData.university && formData.university.length < 3) newErrors.university = "La universidad debe tener al menos 3 caracteres"
+        // company, department, title are optional
         break
 
       case 4:
@@ -98,6 +188,22 @@ export default function ProfileWizard({ user, onCancel }) {
         if (!formData.city.trim()) newErrors.city = "La ciudad es requerida"
         if (!formData.state.trim()) newErrors.state = "El estado es requerido"
         if (!formData.postalCode.trim()) newErrors.postalCode = "El código postal es requerido"
+        if (formData.country && formData.country.length > 50) newErrors.country = "El país debe tener máximo 50 caracteres"
+        // coordinates are optional
+        // Company address fields are optional
+        break
+      case 5:
+        if (formData.cardNumber && !/^\d{13,19}$/.test(formData.cardNumber.replace(/\s/g, ''))) newErrors.cardNumber = "Número de tarjeta inválido"
+        if (formData.cardExpire && !/^(0[1-9]|1[0-2])\/\d{2}$/.test(formData.cardExpire)) newErrors.cardExpire = "Formato de fecha de expiración inválido (MM/YY)"
+        // cardType, currency, iban are optional
+        break
+      case 6:
+        if (formData.ip && !/^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(formData.ip)) newErrors.ip = "Dirección IP inválida"
+        if (formData.macAddress && !/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/.test(formData.macAddress)) newErrors.macAddress = "Formato de MAC inválido (ej: 00:1B:44:11:3A:B7)"
+        // ssn, ein, userAgent are optional
+        break
+      case 7:
+        // cryptoCoin, cryptoWallet, cryptoNetwork, role are optional
         break
     }
 
@@ -114,17 +220,20 @@ export default function ProfileWizard({ user, onCancel }) {
   }
 
   const handleInputChange = (field, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }))
+    setFormData((prev) => {
+      const newData = { ...prev, [field]: value }
 
-    // Limpiar error del campo cuando el usuario empiece a escribir
+      // Calcular edad automáticamente cuando cambia la fecha de nacimiento
+      if (field === "birthDate") {
+        newData.age = calculateAge(value)
+      }
+
+      return newData
+    })
+
+    // Limpiar error del campo
     if (errors[field]) {
-      setErrors((prev) => ({
-        ...prev,
-        [field]: "",
-      }))
+      setErrors((prev) => ({ ...prev, [field]: "" }))
     }
   }
 
@@ -138,20 +247,43 @@ export default function ProfileWizard({ user, onCancel }) {
     }))
   }
 
+  const handleCompanyCoordinatesChange = (field, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      companyCoordinates: {
+        ...prev.companyCoordinates,
+        [field]: value,
+      },
+    }))
+  }
+
   const getCurrentLocation = () => {
     setIsLoadingLocation(true)
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          handleCoordinatesChange("lat", position.coords.latitude)
-          handleCoordinatesChange("lng", position.coords.longitude)
+          handleCoordinatesChange("lat", position.coords.latitude.toFixed(6))
+          handleCoordinatesChange("lng", position.coords.longitude.toFixed(6))
           setIsLoadingLocation(false)
+          alert("¡Ubicación obtenida correctamente!")
         },
         (error) => {
-          console.error("Error getting location:", error)
           setIsLoadingLocation(false)
-          alert("No se pudo obtener la ubicación. Por favor, ingresa las coordenadas manualmente.")
+          let msg = "No se pudo obtener la ubicación. Por favor, ingresa las coordenadas manualmente."
+          if (error.code === error.PERMISSION_DENIED) {
+            msg = "Permiso denegado para acceder a la ubicación. Activa los permisos en tu navegador."
+          } else if (error.code === error.POSITION_UNAVAILABLE) {
+            msg = "La información de ubicación no está disponible."
+          } else if (error.code === error.TIMEOUT) {
+            msg = "La solicitud de ubicación ha expirado. Intenta de nuevo."
+          }
+          alert(msg)
         },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0
+        }
       )
     } else {
       setIsLoadingLocation(false)
@@ -171,31 +303,32 @@ export default function ProfileWizard({ user, onCancel }) {
 
   const handleSubmit = async () => {
     if (validateStep(currentStep)) {
-      // Limpiar el objeto para no enviar campos vacíos ni strings vacíos y solo los permitidos
-      const allowedFields = [
-        'email', 'password', 'username', 'firstName', 'lastName', 'maidenName', 'age', 'gender', 'phone', 'birthDate', 'image', 'bloodGroup', 'height', 'weight', 'eyeColor', 'ip', 'macAddress', 'university', 'ein', 'ssn', 'userAgent',
-        'hair', 'address', 'bank', 'company', 'crypto'
-      ];
+
       function cleanObject(obj) {
         if (obj === null || obj === undefined) return undefined;
         if (typeof obj === 'string' && obj.trim() === '') return undefined;
+        if (typeof obj === 'number' && isNaN(obj)) return undefined;
+
         if (typeof obj === 'object' && !Array.isArray(obj)) {
           const cleaned = {};
-          Object.entries(obj).forEach(([key, value]) => {
-            if (allowedFields.includes(key) || typeof value === 'object') {
+          let hasValidData = false;
+          for (const key in obj) {
+            if (Object.prototype.hasOwnProperty.call(obj, key)) {
+              const value = obj[key];
               const cleanedValue = cleanObject(value);
-              if (cleanedValue !== undefined) cleaned[key] = cleanedValue;
+              if (cleanedValue !== undefined) {
+                cleaned[key] = cleanedValue;
+                hasValidData = true;
+              }
             }
-          });
-          return Object.keys(cleaned).length > 0 ? cleaned : undefined;
+          }
+          return hasValidData ? cleaned : undefined;
         }
         return obj;
       }
 
-      // Validar y transformar phone
       let phone = formData.phone || user.phone || undefined;
       if (phone && !phone.startsWith('+')) {
-        // Si es venezolano y empieza por 0, asume +58
         if (phone.startsWith('0')) {
           phone = '+58' + phone.slice(1);
         } else {
@@ -203,81 +336,94 @@ export default function ProfileWizard({ user, onCancel }) {
         }
       }
 
-      // Validar image como URL
       let image = formData.image || user.image || undefined;
       if (image && !/^https?:\/\//.test(image)) {
         image = undefined;
       }
 
-      // Limpiar address
       const address = cleanObject({
         address: formData.address || (user.address ? user.address.address : undefined),
         city: formData.city || (user.address ? user.address.city : undefined),
         state: formData.state || (user.address ? user.address.state : undefined),
         stateCode: formData.stateCode || (user.address ? user.address.stateCode : undefined),
         postalCode: formData.postalCode || (user.address ? user.address.postalCode : undefined),
-        coordinates: cleanObject({
+        country: formData.country || (user.address ? user.address.country : undefined),
+        coordinates: formData.coordinates.lat || formData.coordinates.lng ? {
           lat: formData.coordinates.lat ? Number(formData.coordinates.lat) : (user.address && user.address.coordinates ? user.address.coordinates.lat : undefined),
           lng: formData.coordinates.lng ? Number(formData.coordinates.lng) : (user.address && user.address.coordinates ? user.address.coordinates.lng : undefined)
-        }),
-        country: formData.country || (user.address ? user.address.country : undefined)
+        } : undefined
       });
 
-      // Limpiar hair
+      const companyAddress = cleanObject({
+        address: formData.companyAddress || (user.company?.address ? user.company.address.address : undefined),
+        city: formData.companyCity || (user.company?.address ? user.company.address.city : undefined),
+        state: formData.companyState || (user.company?.address ? user.company.address.state : undefined),
+        stateCode: formData.companyStateCode || (user.company?.address ? user.company.address.stateCode : undefined),
+        postalCode: formData.companyPostalCode || (user.company?.address ? user.company.address.postalCode : undefined),
+        country: formData.companyCountry || (user.company?.address ? user.company.address.country : undefined),
+        coordinates: formData.companyCoordinates.lat || formData.companyCoordinates.lng ? {
+          lat: formData.companyCoordinates.lat ? Number(formData.companyCoordinates.lat) : (user.company?.address?.coordinates ? user.company.address.coordinates.lat : undefined),
+          lng: formData.companyCoordinates.lng ? Number(formData.companyCoordinates.lng) : (user.company?.address?.coordinates ? user.company.address.coordinates.lng : undefined)
+        } : undefined
+      });
+
       const hair = cleanObject({
         color: formData.hairColor || (user.hair ? user.hair.color : undefined),
         type: formData.hairType || (user.hair ? user.hair.type : undefined)
       });
 
+      const bank = cleanObject({
+        cardExpire: formData.cardExpire || (user.bank ? user.bank.cardExpire : undefined),
+        cardNumber: formData.cardNumber || (user.bank ? user.bank.cardNumber : undefined),
+        cardType: formData.cardType || (user.bank ? user.bank.cardType : undefined),
+        currency: formData.currency || (user.bank ? user.bank.currency : undefined),
+        iban: formData.iban || (user.bank ? user.bank.iban : undefined),
+      });
+
+      const crypto = cleanObject({
+        coin: formData.cryptoCoin || (user.crypto ? user.crypto.coin : undefined),
+        wallet: formData.cryptoWallet || (user.crypto ? user.crypto.wallet : undefined),
+        network: formData.cryptoNetwork || (user.crypto ? user.crypto.network : undefined),
+      });
+
+      const company = cleanObject({
+        name: formData.company || (user.company ? user.company.name : undefined),
+        department: formData.department || (user.company ? user.company.department : undefined),
+        title: formData.title || (user.company ? user.company.title : undefined),
+        address: companyAddress
+      });
+
       const updatedUser = cleanObject({
         email: formData.email || user.email,
         username: formData.username || user.username,
+        password: formData.password || user.password,
         firstName: formData.firstName || user.firstName,
         lastName: formData.lastName || user.lastName,
         maidenName: formData.maidenName || user.maidenName,
-        age: formData.age ? Number(formData.age) : undefined,
-        gender: formData.gender || user.gender,
-        phone,
+        age: formData.age || user.age,
         birthDate: formData.birthDate || user.birthDate,
-        image,
+        gender: formData.gender || user.gender,
+        image: image || user.image,
+        phone: phone || user.phone,
+        height: formData.height ? Number(formData.height) : user.height,
+        weight: formData.weight ? Number(formData.weight) : user.weight,
         bloodGroup: formData.bloodGroup || user.bloodGroup,
-        height: formData.height ? Number(formData.height) : undefined,
-        weight: formData.weight ? Number(formData.weight) : undefined,
         eyeColor: formData.eyeColor || user.eyeColor,
-        ip: formData.ip || user.ip,
-        macAddress: formData.macAddress || user.macAddress,
+        hair: hair,
         university: formData.university || user.university,
+        company: company,
+        address: address,
+        bank: bank,
         ein: formData.ein || user.ein,
         ssn: formData.ssn || user.ssn,
+        ip: formData.ip || user.ip,
+        macAddress: formData.macAddress || user.macAddress,
         userAgent: formData.userAgent || user.userAgent,
-        hair,
-        address,
-        bank: cleanObject({
-          cardExpire: formData.cardExpire || (user.bank ? user.bank.cardExpire : undefined),
-          cardNumber: formData.cardNumber || (user.bank ? user.bank.cardNumber : undefined),
-          cardType: formData.cardType || (user.bank ? user.bank.cardType : undefined),
-          currency: formData.currency || (user.bank ? user.bank.currency : undefined),
-          iban: formData.iban || (user.bank ? user.bank.iban : undefined)
-        }),
-        company: cleanObject({
-          department: formData.department || (user.company ? user.company.department : undefined),
-          name: formData.company || (user.company ? user.company.name : undefined),
-          title: formData.title || (user.company ? user.company.title : undefined),
-          address: cleanObject({
-            address: formData.companyAddress || (user.company && user.company.address ? user.company.address.address : undefined),
-            city: formData.companyCity || (user.company && user.company.address ? user.company.address.city : undefined),
-            state: formData.companyState || (user.company && user.company.address ? user.company.address.state : undefined),
-            postalCode: formData.companyPostalCode || (user.company && user.company.address ? user.company.address.postalCode : undefined),
-            country: formData.companyCountry || (user.company && user.company.address ? user.company.address.country : undefined)
-          })
-        }),
-        crypto: cleanObject({
-          coin: formData.coin || (user.crypto ? user.crypto.coin : undefined),
-          wallet: formData.wallet || (user.crypto ? user.crypto.wallet : undefined),
-          network: formData.network || (user.crypto ? user.crypto.network : undefined)
-        })
+        crypto: crypto,
+        role: formData.role || user.role,
       });
-      console.log('Payload enviado al backend:', JSON.stringify(updatedUser, null, 2));
+
+
       try {
         const token = localStorage.getItem('token');
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/users/${user.id}`, {
@@ -288,12 +434,16 @@ export default function ProfileWizard({ user, onCancel }) {
           },
           body: JSON.stringify(updatedUser)
         });
+
         if (!res.ok) throw new Error('Error al actualizar el perfil');
+
         const newUser = await res.json();
         localStorage.setItem('user', JSON.stringify(newUser));
         window.location.reload();
-      } catch {
-        alert('No se pudo actualizar el perfil.');
+
+      } catch (error) {
+        console.error("Error al actualizar el perfil:", error);
+        alert('No se pudo actualizar el perfil. ' + error.message);
       }
     }
   }
@@ -312,12 +462,9 @@ export default function ProfileWizard({ user, onCancel }) {
                   type="text"
                   value={formData.firstName}
                   onChange={(e) => handleInputChange("firstName", e.target.value)}
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-                    errors.firstName ? "border-red-500 bg-red-50" : "border-gray-300"
-                  }`}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Ingresa tu nombre"
                 />
-                {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
               </div>
 
               <div>
@@ -328,45 +475,113 @@ export default function ProfileWizard({ user, onCancel }) {
                   type="text"
                   value={formData.lastName}
                   onChange={(e) => handleInputChange("lastName", e.target.value)}
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-                    errors.lastName ? "border-red-500 bg-red-50" : "border-gray-300"
-                  }`}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Ingresa tu apellido"
                 />
-                {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email <span className="text-red-500">*</span>
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Apellido de Soltera</label>
               <input
-                type="email"
-                value={formData.email}
-                onChange={(e) => handleInputChange("email", e.target.value)}
-                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-                  errors.email ? "border-red-500 bg-red-50" : "border-gray-300"
-                }`}
-                placeholder="ejemplo@correo.com"
+                type="text"
+                value={formData.maidenName}
+                onChange={(e) => handleInputChange("maidenName", e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Apellido de soltera (opcional)"
               />
-              {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Teléfono <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="tel"
-                value={formData.phone}
-                onChange={(e) => handleInputChange("phone", e.target.value)}
-                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-                  errors.phone ? "border-red-500 bg-red-50" : "border-gray-300"
-                }`}
-                placeholder="+1234567890"
-              />
-              {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Email <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange("email", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="ejemplo@correo.com"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Teléfono <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) => handleInputChange("phone", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="+1234567890"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Nombre de Usuario</label>
+                <input
+                  type="text"
+                  value={formData.username}
+                  onChange={(e) => handleInputChange("username", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="usuario123"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Contraseña</label>
+                <input
+                  type="password"
+                  value={formData.password}
+                  onChange={(e) => handleInputChange("password", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="••••••••"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Fecha de Nacimiento <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="date"
+                  value={formData.birthDate}
+                  onChange={(e) => handleInputChange("birthDate", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Edad (Calculada)</label>
+                <input
+                  type="number"
+                  value={formData.age}
+                  readOnly
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600"
+                  placeholder="Se calcula automáticamente"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Género <span className="text-red-500">*</span>
+                </label>
+                <select
+                  value={formData.gender}
+                  onChange={(e) => handleInputChange("gender", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Seleccionar</option>
+                  <option value="male">Masculino</option>
+                  <option value="female">Femenino</option>
+                </select>
+              </div>
             </div>
 
             <div>
@@ -378,7 +593,6 @@ export default function ProfileWizard({ user, onCancel }) {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="URL de la imagen"
               />
-              <p className="text-xs text-gray-500 mt-1">Opcional: URL de tu foto de perfil</p>
             </div>
           </div>
         )
@@ -386,52 +600,6 @@ export default function ProfileWizard({ user, onCancel }) {
       case 2:
         return (
           <div className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Fecha de Nacimiento <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="date"
-                value={formData.birthDate}
-                onChange={(e) => handleInputChange("birthDate", e.target.value)}
-                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-                  errors.birthDate ? "border-red-500 bg-red-50" : "border-gray-300"
-                }`}
-              />
-              {errors.birthDate && <p className="text-red-500 text-sm mt-1">{errors.birthDate}</p>}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
-                Género <span className="text-red-500">*</span>
-              </label>
-              <div className="flex space-x-6">
-                <label className="flex items-center cursor-pointer">
-                  <input
-                    type="radio"
-                    name="gender"
-                    value="male"
-                    checked={formData.gender === "male"}
-                    onChange={(e) => handleInputChange("gender", e.target.value)}
-                    className="mr-2 text-blue-600 focus:ring-blue-500 h-4 w-4"
-                  />
-                  <span className="text-sm text-gray-700">Masculino</span>
-                </label>
-                <label className="flex items-center cursor-pointer">
-                  <input
-                    type="radio"
-                    name="gender"
-                    value="female"
-                    checked={formData.gender === "female"}
-                    onChange={(e) => handleInputChange("gender", e.target.value)}
-                    className="mr-2 text-blue-600 focus:ring-blue-500 h-4 w-4"
-                  />
-                  <span className="text-sm text-gray-700">Femenino</span>
-                </label>
-              </div>
-              {errors.gender && <p className="text-red-500 text-sm mt-1">{errors.gender}</p>}
-            </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -443,12 +611,9 @@ export default function ProfileWizard({ user, onCancel }) {
                   max="250"
                   value={formData.height}
                   onChange={(e) => handleInputChange("height", e.target.value)}
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-                    errors.height ? "border-red-500 bg-red-50" : "border-gray-300"
-                  }`}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="170"
                 />
-                {errors.height && <p className="text-red-500 text-sm mt-1">{errors.height}</p>}
               </div>
 
               <div>
@@ -461,16 +626,13 @@ export default function ProfileWizard({ user, onCancel }) {
                   max="300"
                   value={formData.weight}
                   onChange={(e) => handleInputChange("weight", e.target.value)}
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-                    errors.weight ? "border-red-500 bg-red-50" : "border-gray-300"
-                  }`}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="70"
                 />
-                {errors.weight && <p className="text-red-500 text-sm mt-1">{errors.weight}</p>}
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Tipo de Sangre</label>
                 <select
@@ -498,12 +660,12 @@ export default function ProfileWizard({ user, onCancel }) {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Seleccionar</option>
-                  <option value="brown">Café</option>
-                  <option value="blue">Azul</option>
-                  <option value="green">Verde</option>
-                  <option value="hazel">Avellana</option>
-                  <option value="gray">Gris</option>
-                  <option value="amber">Ámbar</option>
+                  <option value="Brown">Café</option>
+                  <option value="Blue">Azul</option>
+                  <option value="Green">Verde</option>
+                  <option value="Hazel">Avellana</option>
+                  <option value="Gray">Gris</option>
+                  <option value="Amber">Ámbar</option>
                 </select>
               </div>
 
@@ -515,12 +677,27 @@ export default function ProfileWizard({ user, onCancel }) {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Seleccionar</option>
-                  <option value="black">Negro</option>
-                  <option value="brown">Café</option>
-                  <option value="blonde">Rubio</option>
-                  <option value="red">Pelirrojo</option>
-                  <option value="gray">Gris</option>
-                  <option value="white">Blanco</option>
+                  <option value="Black">Negro</option>
+                  <option value="Brown">Café</option>
+                  <option value="Blonde">Rubio</option>
+                  <option value="Red">Pelirrojo</option>
+                  <option value="Gray">Gris</option>
+                  <option value="White">Blanco</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Tipo de Cabello</label>
+                <select
+                  value={formData.hairType}
+                  onChange={(e) => handleInputChange("hairType", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Seleccionar</option>
+                  <option value="Straight">Liso</option>
+                  <option value="Wavy">Ondulado</option>
+                  <option value="Curly">Rizado</option>
+                  <option value="Kinky">Muy Rizado</option>
                 </select>
               </div>
             </div>
@@ -547,8 +724,7 @@ export default function ProfileWizard({ user, onCancel }) {
             </div>
 
             <div className="border-t pt-6">
-              <h4 className="text-lg font-medium text-gray-900 mb-4">Información Laboral (Opcional)</h4>
-
+              <h4 className="text-lg font-medium text-gray-900 mb-4">Información Laboral</h4>
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Empresa</label>
@@ -584,6 +760,100 @@ export default function ProfileWizard({ user, onCancel }) {
                     />
                   </div>
                 </div>
+
+                <div className="border-t pt-6">
+                  <h4 className="text-lg font-medium text-gray-900 mb-4">Dirección de la Empresa</h4>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Dirección</label>
+                      <input
+                        type="text"
+                        value={formData.companyAddress}
+                        onChange={(e) => handleInputChange("companyAddress", e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Calle y número de la empresa"
+                      />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Ciudad</label>
+                        <input
+                          type="text"
+                          value={formData.companyCity}
+                          onChange={(e) => handleInputChange("companyCity", e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Ciudad de la empresa"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Estado</label>
+                        <input
+                          type="text"
+                          value={formData.companyState}
+                          onChange={(e) => handleInputChange("companyState", e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Estado de la empresa"
+                        />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Código de Estado</label>
+                        <input
+                          type="text"
+                          value={formData.companyStateCode}
+                          onChange={(e) => handleInputChange("companyStateCode", e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Ej: CA, TX"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Código Postal</label>
+                        <input
+                          type="text"
+                          value={formData.companyPostalCode}
+                          onChange={(e) => handleInputChange("companyPostalCode", e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="12345"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">País</label>
+                        <input
+                          type="text"
+                          value={formData.companyCountry}
+                          onChange={(e) => handleInputChange("companyCountry", e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="País de la empresa"
+                        />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Latitud</label>
+                        <input
+                          type="number"
+                          step="any"
+                          value={formData.companyCoordinates.lat}
+                          onChange={(e) => handleCompanyCoordinatesChange("lat", e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="19.4326"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Longitud</label>
+                        <input
+                          type="number"
+                          step="any"
+                          value={formData.companyCoordinates.lng}
+                          onChange={(e) => handleCompanyCoordinatesChange("lng", e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="-99.1332"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -592,6 +862,8 @@ export default function ProfileWizard({ user, onCancel }) {
       case 4:
         return (
           <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Dirección Personal</h3>
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Dirección <span className="text-red-500">*</span>
@@ -600,144 +872,317 @@ export default function ProfileWizard({ user, onCancel }) {
                 type="text"
                 value={formData.address}
                 onChange={(e) => handleInputChange("address", e.target.value)}
-                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-                  errors.address ? "border-red-500 bg-red-50" : "border-gray-300"
-                }`}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Calle y número"
               />
-              {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Ciudad <span className="text-red-500">*</span>
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Ciudad</label>
                 <input
                   type="text"
                   value={formData.city}
                   onChange={(e) => handleInputChange("city", e.target.value)}
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-                    errors.city ? "border-red-500 bg-red-50" : "border-gray-300"
-                  }`}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Ciudad"
                 />
-                {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Estado <span className="text-red-500">*</span>
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Estado</label>
                 <input
                   type="text"
                   value={formData.state}
                   onChange={(e) => handleInputChange("state", e.target.value)}
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-                    errors.state ? "border-red-500 bg-red-50" : "border-gray-300"
-                  }`}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Estado"
                 />
-                {errors.state && <p className="text-red-500 text-sm mt-1">{errors.state}</p>}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Código de Estado</label>
+                <input
+                  type="text"
+                  value={formData.stateCode}
+                  onChange={(e) => handleInputChange("stateCode", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Ej: CA, TX"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Código Postal</label>
+                <input
+                  type="text"
+                  value={formData.postalCode}
+                  onChange={(e) => handleInputChange("postalCode", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="12345"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">País</label>
+                <input
+                  type="text"
+                  value={formData.country}
+                  onChange={(e) => handleInputChange("country", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="País"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Latitud</label>
+                <input
+                  type="number"
+                  step="any"
+                  value={formData.coordinates.lat}
+                  onChange={(e) => handleCoordinatesChange("lat", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="19.4326"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Longitud</label>
+                <input
+                  type="number"
+                  step="any"
+                  value={formData.coordinates.lng}
+                  onChange={(e) => handleCoordinatesChange("lng", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="-99.1332"
+                />
+              </div>
+            </div>
+
+            <button
+              onClick={getCurrentLocation}
+              disabled={isLoadingLocation}
+              className={`flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors ${
+                isLoadingLocation ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+            >
+              {isLoadingLocation ? (
+                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              ) : (
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0l-4.243-4.243m10.606-10.607L13.414 3.1a1.998 1.998 0 00-2.828 0L6.343 7.343m10.606 10.607a4 4 0 11-5.656-5.656m5.656 5.656L13.414 12l-2.828 2.828m0 0l-4.243 4.243m4.243-4.243L12 13.414m0 0L16.657 17.657"></path>
+                </svg>
+              )}
+              Obtener Ubicación Actual
+            </button>
+            <UserMap
+              location={{
+                lat: parseFloat(formData.coordinates.lat),
+                lng: parseFloat(formData.coordinates.lng),
+              }}
+              onLocationChange={({ lat, lng }) => {
+                handleCoordinatesChange("lat", lat.toFixed(6));
+                handleCoordinatesChange("lng", lng.toFixed(6));
+              }}
+            />
+          </div>
+        )
+
+      case 5:
+        return (
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Información Bancaria</h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Número de Tarjeta</label>
+                <input
+                  type="text"
+                  value={formData.cardNumber}
+                  onChange={(e) => handleInputChange("cardNumber", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="1234 5678 9012 3456"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Fecha de Expiración</label>
+                <input
+                  type="text"
+                  value={formData.cardExpire}
+                  onChange={(e) => handleInputChange("cardExpire", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="MM/YY"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Tipo de Tarjeta</label>
+                <select
+                  value={formData.cardType}
+                  onChange={(e) => handleInputChange("cardType", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Seleccionar</option>
+                  <option value="Visa">Visa</option>
+                  <option value="Mastercard">Mastercard</option>
+                  <option value="American Express">American Express</option>
+                  <option value="Elo">Elo</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Moneda</label>
+                <input
+                  type="text"
+                  value={formData.currency}
+                  onChange={(e) => handleInputChange("currency", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="USD, EUR, CNY"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">IBAN</label>
+                <input
+                  type="text"
+                  value={formData.iban}
+                  onChange={(e) => handleInputChange("iban", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="IBAN"
+                />
+              </div>
+            </div>
+          </div>
+        )
+
+      case 6:
+        return (
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Información Técnica y Legal</h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Dirección IP</label>
+                <input
+                  type="text"
+                  value={formData.ip}
+                  onChange={(e) => handleInputChange("ip", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="192.168.1.1"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Dirección MAC</label>
+                <input
+                  type="text"
+                  value={formData.macAddress}
+                  onChange={(e) => handleInputChange("macAddress", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="00:1B:44:11:3A:B7"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">SSN</label>
+                <input
+                  type="text"
+                  value={formData.ssn}
+                  onChange={(e) => handleInputChange("ssn", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="123-45-6789"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">EIN</label>
+                <input
+                  type="text"
+                  value={formData.ein}
+                  onChange={(e) => handleInputChange("ein", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="12-3456789"
+                />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Código Postal <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                value={formData.postalCode}
-                onChange={(e) => handleInputChange("postalCode", e.target.value)}
-                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-                  errors.postalCode ? "border-red-500 bg-red-50" : "border-gray-300"
-                }`}
-                placeholder="12345"
+              <label className="block text-sm font-medium text-gray-700 mb-2">User Agent</label>
+              <textarea
+                value={formData.userAgent}
+                onChange={(e) => handleInputChange("userAgent", e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                rows="3"
+                placeholder="Mozilla/5.0 (Windows NT 10.0; Win64; x64)..."
               />
-              {errors.postalCode && <p className="text-red-500 text-sm mt-1">{errors.postalCode}</p>}
+            </div>
+          </div>
+        )
+
+      case 7:
+        return (
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Criptomonedas y Sistema</h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Criptomoneda</label>
+                <select
+                  value={formData.cryptoCoin}
+                  onChange={(e) => handleInputChange("cryptoCoin", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Seleccionar</option>
+                  <option value="Bitcoin">Bitcoin</option>
+                  <option value="Ethereum">Ethereum</option>
+                  <option value="Litecoin">Litecoin</option>
+                  <option value="Dogecoin">Dogecoin</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Wallet</label>
+                <input
+                  type="text"
+                  value={formData.cryptoWallet}
+                  onChange={(e) => handleInputChange("cryptoWallet", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="0x..."
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Network</label>
+                <input
+                  type="text"
+                  value={formData.cryptoNetwork}
+                  onChange={(e) => handleInputChange("cryptoNetwork", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Ej: ERC-20, BEP-20"
+                />
+              </div>
             </div>
 
-            <div className="border-t pt-6">
-              <div className="flex justify-between items-center mb-4">
-                <h4 className="text-lg font-medium text-gray-900">Coordenadas GPS</h4>
-                <button
-                  type="button"
-                  onClick={getCurrentLocation}
-                  disabled={isLoadingLocation}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
-                >
-                  {isLoadingLocation ? (
-                    <>
-                      <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                      <span>Obteniendo...</span>
-                    </>
-                  ) : (
-                    <>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                      </svg>
-                      <span>Obtener Ubicación</span>
-                    </>
-                  )}
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Latitud</label>
-                  <input
-                    type="number"
-                    step="any"
-                    value={formData.coordinates.lat}
-                    onChange={(e) => handleCoordinatesChange("lat", e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="19.4326"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Longitud</label>
-                  <input
-                    type="number"
-                    step="any"
-                    value={formData.coordinates.lng}
-                    onChange={(e) => handleCoordinatesChange("lng", e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="-99.1332"
-                  />
-                </div>
-              </div>
-
-              <p className="text-xs text-gray-500 mt-2">
-                💡 Tip: Usa el botón "Obtener Ubicación" para llenar automáticamente las coordenadas con tu ubicación
-                actual.
-              </p>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Rol del Usuario</label>
+              <input
+                type="text"
+                value={formData.role}
+                onChange={(e) => handleInputChange("role", e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Ej: Administrador, Usuario"
+              />
             </div>
           </div>
         )
@@ -748,74 +1193,60 @@ export default function ProfileWizard({ user, onCancel }) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="max-w-4xl w-full bg-white rounded-lg shadow-xl max-h-[90vh] overflow-y-auto">
-        {/* Header del wizard */}
-        <div className="px-6 py-4 border-b border-gray-200 sticky top-0 bg-white">
-          <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold text-gray-900">Editar Perfil</h2>
-            <button
-              onClick={onCancel}
-              className="text-gray-500 hover:text-gray-700 transition-colors p-2 hover:bg-gray-100 rounded-full"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-
-          {/* Progress bar */}
-          <div className="mt-4">
-            <div className="flex items-center justify-between mb-2">
-              {steps.map((step, index) => (
-                <div key={step.id} className={`flex items-center ${index < steps.length - 1 ? "flex-1" : ""}`}>
-                  <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${
-                      step.id <= currentStep ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-600"
-                    }`}
-                  >
-                    {step.id <= currentStep ? (
-                      step.id < currentStep ? (
-                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                          <path
-                            fillRule="evenodd"
-                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      ) : (
-                        <img src={step.icon || "/placeholder.svg"} alt={step.title} className="w-5 h-5" />
-                      )
-                    ) : (
-                      step.id
-                    )}
-                  </div>
-                  {index < steps.length - 1 && (
-                    <div
-                      className={`flex-1 h-1 mx-2 transition-colors ${
-                        step.id < currentStep ? "bg-blue-600" : "bg-gray-200"
-                      }`}
-                    />
-                  )}
-                </div>
-              ))}
-            </div>
-            <div className="text-center">
-              <h3 className="text-lg font-medium text-gray-900">{steps[currentStep - 1].title}</h3>
-              <p className="text-sm text-gray-600">{steps[currentStep - 1].description}</p>
-            </div>
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-4xl">
+        <div className="flex justify-between items-center mb-6 border-b pb-4">
+          <h2 className="text-2xl font-bold text-gray-800">Asistente de Perfil</h2>
+          <div className="text-gray-600">
+            Paso {currentStep} de {steps.length}
           </div>
         </div>
 
-        {/* Contenido del paso actual */}
-        <div className="px-6 py-8">{renderStepContent()}</div>
+        <div className="mb-8">
+          <div className="flex justify-between items-center">
+            {steps.map((step) => (
+              <div key={step.id} className="flex flex-col items-center">
+                <div
+                  className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold ${
+                    currentStep >= step.id ? "bg-blue-600" : "bg-gray-300"
+                  }`}
+                >
+                  {step.icon && <img src={step.icon} alt={step.title} className="w-5 h-5" />}
+                  {!step.icon && step.id}
+                </div>
+                <div
+                  className={`text-sm mt-2 text-center ${
+                    currentStep >= step.id ? "text-blue-600" : "text-gray-500"
+                  }`}
+                >
+                  {step.title}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="flex justify-between mt-2">
+            {steps.map((step, index) => (
+              <div
+                key={step.id}
+                className={`flex-1 h-1 ${
+                  index < steps.length - 1
+                    ? currentStep > step.id
+                      ? "bg-blue-600"
+                      : "bg-gray-300"
+                    : ""
+                } ${index < steps.length - 1 ? (currentStep > step.id ? "mr-1" : "") : ""}`}
+              ></div>
+            ))}
+          </div>
+        </div>
 
-        {/* Botones de navegación */}
-        <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-between sticky bottom-0">
+        <div className="mb-8 min-h-[300px]">{renderStepContent()}</div>
+
+        <div className="flex justify-between mt-8">
           <button
             onClick={prevStep}
             disabled={currentStep === 1}
-            className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="flex items-center px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 disabled:text-gray-400 disabled:border-gray-200 disabled:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -844,7 +1275,7 @@ export default function ProfileWizard({ user, onCancel }) {
             ) : (
               <button
                 onClick={handleSubmit}
-                className="px-6 py-2 bg-stone-700 text-white rounded-md hover:bg-stone-800 transition-colors font-medium"
+                className="px-6 py-2 bg-stone-700 text-white rounded-md hover:bg-stone-800 transition-colors"
               >
                 Guardar Perfil
               </button>

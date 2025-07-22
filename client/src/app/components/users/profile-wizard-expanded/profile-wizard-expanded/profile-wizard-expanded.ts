@@ -35,20 +35,20 @@ export class ProfileWizardExpanded {
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
       // Paso 1
-      firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
-      lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
+      firstName: [''],
+      lastName: [''],
       maidenName: [''],
-      email: ['', [Validators.required, Validators.email]],
-      phone: ['', [Validators.required]],
+      email: [''],
+      phone: [''],
       username: [''],
       password: [''],
-      birthDate: ['', Validators.required],
+      birthDate: [''],
       age: [''],
-      gender: ['', Validators.required],
+      gender: [''],
       image: [''],
       // Paso 2
-      height: ['', Validators.required],
-      weight: ['', Validators.required],
+      height: [''],
+      weight: [''],
       bloodGroup: [''],
       eyeColor: [''],
       hairColor: [''],

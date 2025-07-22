@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { TangramLoadingComponent } from '../../components/shared/tangram-loading/tangram-loading.component';
 import { HttpClientModule } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { FormsModule } from '@angular/forms';
+import { Inject } from '@angular/core';
 
 // Importar los componentes reales
 import { UsersListComponent } from '../../components/admin/userslist/userslist.component';
@@ -18,7 +18,7 @@ export class UserMap { @Input() latitude: number = 0; @Input() longitude: number
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, HttpClientModule, UsersListComponent, UserDetailsComponent, UserProfile, UserMap, TangramLoadingComponent],
+  imports: [CommonModule, RouterModule, FormsModule, HttpClientModule, UsersListComponent, UserDetailsComponent, UserProfile, UserMap],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
@@ -29,7 +29,7 @@ export class Dashboard implements OnInit {
   statusLoading = false;
   statusError: string | null = null;
 
-  constructor(private router: Router) {}
+  constructor(@Inject(Router) public router: Router) {}
 
   async ngOnInit() {
     await this.fetchProfile();

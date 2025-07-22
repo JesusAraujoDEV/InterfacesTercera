@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { CommonModule, NgIf, NgFor, NgClass } from '@angular/common';
 import { FormBuilder } from '@angular/forms';
 import { UserCreateModalComponent } from '../usercreatemodal/usercreatemodal.component';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-users-list',
@@ -26,7 +27,7 @@ export class UsersListComponent implements OnInit {
   async fetchUsers() {
     try {
       this.loading = true;
-      const response = await fetch(`${(window as any).env?.VITE_BACKEND_URL || ''}/api/users`);
+      const response = await fetch(`${environment.BACKEND_URL}/api/users`);
       const data = await response.json();
       this.users = data;
     } catch (error) {
@@ -57,7 +58,7 @@ export class UsersListComponent implements OnInit {
     const token = localStorage.getItem('token');
     const action = checked ? 'unblock' : 'block';
     try {
-      const res = await fetch(`${(window as any).env?.VITE_BACKEND_URL || ''}/api/block/${user.id}/${action}`, {
+      const res = await fetch(`${environment.BACKEND_URL}/api/block/${user.id}/${action}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

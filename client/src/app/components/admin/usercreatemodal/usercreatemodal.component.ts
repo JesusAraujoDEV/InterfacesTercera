@@ -1,23 +1,21 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CommonModule, NgIf } from '@angular/common';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-user-create-modal',
   standalone: true,
-  imports: [CommonModule, NgIf, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './usercreatemodal.component.html',
   styleUrls: ['./usercreatemodal.component.css']
 })
 export class UserCreateModalComponent {
-  @Input() open: boolean = false;
   @Output() onClose = new EventEmitter<void>();
   @Output() onSuccess = new EventEmitter<void>();
-
   form: FormGroup;
   loading = false;
-  error = '';
-  success = '';
+  error: string | null = null;
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
@@ -28,50 +26,33 @@ export class UserCreateModalComponent {
     });
   }
 
+  close() {
+    this.onClose.emit();
+  }
+
   async submit() {
-    this.error = '';
-    this.success = '';
     if (this.form.invalid) return;
-    if (this.form.value.password !== this.form.value.confirmPassword) {
-      this.error = 'Passwords do not match';
-      return;
-    }
     this.loading = true;
+    this.error = null;
     try {
-      let username = this.form.value.email;
-      if (username.endsWith('@gmail.com')) {
-        username = username.replace('@gmail.com', '');
-      } else if (username.includes('@')) {
-        username = username.split('@')[0];
+      const { name, email, password, confirmPassword } = this.form.value;
+      if (password !== confirmPassword) {
+        this.error = 'Las contraseñas no coinciden';
+        this.loading = false;
+        return;
       }
-      const payload = {
-        email: this.form.value.email,
-        password: this.form.value.password,
-        username,
-      };
-      const res = await fetch(`${(window as any).env?.VITE_BACKEND_URL || ''}/api/users/`, {
+      const res = await fetch(`${environment.BACKEND_URL}/api/users/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({ name, email, password })
       });
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.message || 'Registration failed');
-      }
-      this.success = '¡Cuenta creada exitosamente!';
-      setTimeout(() => {
-        this.onSuccess.emit();
-        this.onClose.emit();
-        window.location.reload();
-      }, 1200);
-    } catch (err: any) {
-      this.error = err.message || 'Registration failed. Please try again.';
+      if (!res.ok) throw new Error('No se pudo crear el usuario');
+      this.onSuccess.emit();
+      this.close();
+    } catch (e: any) {
+      this.error = e.message || 'Error desconocido';
     } finally {
       this.loading = false;
     }
-  }
-
-  close() {
-    this.onClose.emit();
   }
 }

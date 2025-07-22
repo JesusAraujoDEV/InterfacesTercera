@@ -6,12 +6,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { FormsModule } from '@angular/forms';
 
-// Placeholders para los subcomponentes
+// Importar los componentes reales
+import { UsersListComponent } from '../../components/admin/userslist/userslist.component';
+import { UserDetailsComponent } from '../../components/admin/userdetails/userdetails.component';
+// Mantener los placeholders solo para UserProfile y UserMap
 import { Component as NgComponent, Input, Output, EventEmitter } from '@angular/core';
-@NgComponent({ selector: 'app-users-list', standalone: true, template: '<div class="p-4 bg-white rounded shadow">UsersList (placeholder)</div>' })
-export class UsersList { @Output() selectUser = new EventEmitter<any>(); }
-@NgComponent({ selector: 'app-user-details', standalone: true, template: '<div class="p-4 bg-white rounded shadow">UserDetails (placeholder)</div>' })
-export class UserDetails { @Input() user: any; }
 @NgComponent({ selector: 'app-user-profile', standalone: true, template: '<div class="p-4 bg-white rounded shadow">UserProfile (placeholder)</div>' })
 export class UserProfile { @Input() user: any; @Input() status: any; }
 @NgComponent({ selector: 'app-user-map', standalone: true, template: '<div class="p-4 bg-white rounded shadow">UserMap (placeholder)</div>' })
@@ -20,7 +19,7 @@ export class UserMap { @Input() latitude: number = 0; @Input() longitude: number
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, HttpClientModule, UsersList, UserDetails, UserProfile, UserMap, TangramLoadingComponent],
+  imports: [CommonModule, RouterModule, FormsModule, HttpClientModule, UsersListComponent, UserDetailsComponent, UserProfile, UserMap, TangramLoadingComponent],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })

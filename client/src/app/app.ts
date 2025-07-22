@@ -3,6 +3,7 @@ import { Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationErr
 import { LoadingService } from './loading.service';
 import { TangramLoadingComponent } from './components/shared/tangram-loading/tangram-loading.component';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,7 @@ import { CommonModule } from '@angular/common';
 export class App {
   loading$;
 
-  constructor(private router: Router, private loadingService: LoadingService) {
+  constructor(private router: Router, private loadingService: LoadingService, private cdr: ChangeDetectorRef) {
     this.loading$ = this.loadingService.loading$;
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
@@ -23,9 +24,17 @@ export class App {
         event instanceof NavigationCancel ||
         event instanceof NavigationError
       ) {
-        setTimeout(() => this.loadingService.hide(), 400);
+        setTimeout(() => {
+          this.loadingService.hide();
+          this.cdr.detectChanges();
+        }, 400);
       }
     });
   }
   protected title = 'client';
+
+  onLoaderAnimationEnd() {
+    this.loadingService.hide();
+    this.cdr.detectChanges();
+  }
 }

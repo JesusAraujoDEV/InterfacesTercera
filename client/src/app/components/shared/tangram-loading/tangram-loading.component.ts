@@ -5,7 +5,9 @@ import { CommonModule } from '@angular/common';
   selector: 'app-tangram-loading',
   standalone: true,
   imports: [CommonModule],
-  template: `<canvas id="tangramCanvas"></canvas>`,
+  template: `
+    <canvas id="tangramCanvas"></canvas>
+  `,
   styleUrls: ['./tangram-loading.component.css']
 })
 export class TangramLoadingComponent {}

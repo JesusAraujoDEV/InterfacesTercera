@@ -14,7 +14,7 @@ import { CommonModule } from '@angular/common';
             <span class="text-sm font-bold tracking-wider" style="color: var(--color-primary)">LANDING</span>
             <span class="text-xs font-light tracking-wider" style="color: var(--color-accent)">PHOTOGRAPHY</span>
           </a>
-          <div class="hidden md:flex items-center space-x-8">
+          <div class="flex items-center space-x-8">
             <a routerLink="/" class="font-medium hover:underline" style="color: var(--color-text)">Home</a>
             <a href="#about" class="font-medium hover:underline" style="color: var(--color-text)">About</a>
             <a href="#portfolio" class="font-medium hover:underline" style="color: var(--color-text)">Portfolio</a>

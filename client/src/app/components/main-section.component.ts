@@ -28,7 +28,7 @@ import { Component } from '@angular/core';
                 src="/assets/image.jpg"
                 alt="Professional photographer"
                 class="w-full h-auto object-cover rounded-lg"
-                onerror="this.onerror=null;this.src='/placeholder.svg?height=600&width=400';"
+                onerror="this.onerror=null;this.src='/assets/placeholder.svg?height=600&width=400';"
               />
             </div>
           </div>

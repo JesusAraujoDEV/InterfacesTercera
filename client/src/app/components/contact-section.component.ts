@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
       <h1 class="uppercase text-5xl mb-4 font-semibold" style="color: var(--color-primary)">Contact us</h1>
       <div class="grid grid-cols-1 md:grid-cols-2 w-full">
         <div class="hidden md:flex justify-center items-center">
-          <img src="/assets/camera.png" alt="Camera" onerror="this.onerror=null;this.src='/placeholder.svg?height=300&width=400';" />
+          <img src="/assets/camera.png" alt="Camera" onerror="this.onerror=null;this.src='/assets/placeholder.svg?height=300&width=400';" />
         </div>
         <div class="flex flex-col w-full items-center">
           <div class="flex flex-col items-center w-full max-w-xs px-2 mb-6">

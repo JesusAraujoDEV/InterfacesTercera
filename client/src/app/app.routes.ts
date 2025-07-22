@@ -29,7 +29,7 @@ export class Colors {}
 export class Fonts {}
 
 export const routes: Routes = [
-  { path: '', component: Login },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'login', component: Login },
   { path: 'register', component: Register },
   { path: 'home', component: Home },

@@ -43,7 +43,7 @@ export class Login {
       const { user, token } = await res.json();
       localStorage.setItem('user', JSON.stringify(user));
       localStorage.setItem('token', token);
-      this.router.navigate(['/']);
+      this.router.navigate(['/home']);
     } catch (err: any) {
       this.error = err.message || 'Invalid credentials. Please try again.';
     } finally {

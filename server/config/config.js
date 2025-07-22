@@ -6,7 +6,8 @@ const config = {
   isProd: process.env.NODE_ENV === 'production',
   db_url: process.env.DATABASE_URL,
   jwtSecret: process.env.JWT_SECRET,
-  
+  client_urls: process.env.CLIENT_URLS.split(','),
+
   // PostgreSQL Configuration
   postgres: {
     user: process.env.POSTGRES_USER,

@@ -92,18 +92,26 @@ export class Navbar implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.setUserFromStorage();
-    window.addEventListener('storage', this.handleStorage);
-    document.addEventListener('mousedown', this.handleClickOutside);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('storage', this.handleStorage);
+      document.addEventListener('mousedown', this.handleClickOutside);
+    }
   }
 
   ngOnDestroy() {
-    window.removeEventListener('storage', this.handleStorage);
-    document.removeEventListener('mousedown', this.handleClickOutside);
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('storage', this.handleStorage);
+      document.removeEventListener('mousedown', this.handleClickOutside);
+    }
   }
 
   setUserFromStorage() {
-    const storedUser = localStorage.getItem('user');
-    this.user = storedUser ? JSON.parse(storedUser) : null;
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const storedUser = localStorage.getItem('user');
+      this.user = storedUser ? JSON.parse(storedUser) : null;
+    } else {
+      this.user = null;
+    }
   }
 
   handleStorage = () => {
@@ -129,7 +137,9 @@ export class Navbar implements OnInit, OnDestroy {
   }
 
   logout() {
-    localStorage.removeItem('user');
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.removeItem('user');
+    }
     this.user = null;
     this.dropdownOpen = false;
     this.router.navigate(['/login']);

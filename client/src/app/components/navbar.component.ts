@@ -1,11 +1,11 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, Inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule, NgClass],
   template: `
     <nav class="fixed top-0 left-0 right-0 z-50 shadow-sm" style="background: var(--color-secondary); color: var(--color-text); backdrop-filter: blur(4px)">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -19,6 +19,7 @@ import { CommonModule } from '@angular/common';
             <a href="#about" class="font-medium hover:underline" style="color: var(--color-text)">About</a>
             <a href="#portfolio" class="font-medium hover:underline" style="color: var(--color-text)">Portfolio</a>
             <a href="#contact-us" class="font-medium hover:underline" style="color: var(--color-text)">Contact us</a>
+            <a routerLink="/config" class="font-medium hover:underline" style="color: var(--color-primary)">Config</a>
             <div class="relative flex items-center" #dropdownRef>
               <button
                 class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-stone-200 focus:outline-none"
@@ -44,7 +45,7 @@ import { CommonModule } from '@angular/common';
           <a href="#about" class="block font-medium hover:underline" style="color: var(--color-text)" (click)="closeMenu()">About</a>
           <a href="#portfolio" class="block font-medium hover:underline" style="color: var(--color-text)" (click)="closeMenu()">Portfolio</a>
           <a href="#contact-us" class="block font-medium hover:underline" style="color: var(--color-text)" (click)="closeMenu()">Contact us</a>
-          <a *ngIf="user && user.role === 'admin'" routerLink="/config" class="block font-medium hover:underline" style="color: var(--color-primary)" (click)="closeMenu()">Configuración</a>
+          <a routerLink="/config" class="block font-medium hover:underline" style="color: var(--color-primary)" (click)="closeMenu()">Config</a>
           <ng-container *ngIf="user; else loginLinkMobile">
             <div class="relative flex items-center" #dropdownRef>
               <button
@@ -88,7 +89,7 @@ export class Navbar implements OnInit, OnDestroy {
   dropdownOpen = false;
   @ViewChild('dropdownRef') dropdownRef!: ElementRef;
 
-  constructor(private router: Router) {}
+  constructor(@Inject(Router) private router: Router) {}
 
   ngOnInit() {
     this.setUserFromStorage();

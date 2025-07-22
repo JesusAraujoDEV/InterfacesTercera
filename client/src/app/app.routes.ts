@@ -3,30 +3,9 @@ import { Login } from './pages/login/login';
 import { Register } from './pages/register/register';
 import { Home } from './pages/home/home';
 import { Dashboard } from './pages/dashboard/dashboard';
-import { Component } from '@angular/core';
-
-// Placeholders para los nuevos componentes
-@Component({
-  selector: 'app-config',
-  standalone: true,
-  templateUrl: './pages/config/config.html',
-  styleUrl: './pages/config/config.css'
-})
-export class Config {}
-@Component({
-  selector: 'app-colors',
-  standalone: true,
-  templateUrl: './pages/config/colors.html',
-  styleUrl: './pages/config/colors.css'
-})
-export class Colors {}
-@Component({
-  selector: 'app-fonts',
-  standalone: true,
-  templateUrl: './pages/config/fonts.html',
-  styleUrl: './pages/config/fonts.css'
-})
-export class Fonts {}
+import { Config } from './pages/config/config';
+import { Colors } from './pages/config/colors';
+import { Fonts } from './pages/config/fonts';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },

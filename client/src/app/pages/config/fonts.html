@@ -1,1 +1,294 @@
-<!-- Archivo vacío para evitar error de compilación --> 
+<section class="min-h-screen px-4 sm:px-6 md:px-10 lg:px-24 py-12 sm:py-16 bg-gradient-to-br from-stone-50 to-stone-200 text-stone-800 font-sans relative">
+  <div class="absolute inset-0 overflow-hidden opacity-10 -z-10">
+    <img
+      src="/assets/image.jpg"
+      alt="Photographer at work"
+      class="w-full h-full object-cover object-center scale-110 blur-sm"
+      onerror="this.onerror=null;this.src='/placeholder.svg?height=800&width=1200';"
+    />
+  </div>
+
+  <div class="relative flex items-center justify-center mb-8 sm:mb-10">
+    <a
+      routerLink="/config"
+      class="absolute left-0 top-1/2 -translate-y-1/2 flex items-center text-stone-600 hover:text-stone-800 transition-colors duration-200 text-lg sm:text-xl md:text-2xl lg:text-3xl p-2 rounded-full hover:bg-stone-200 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:ring-opacity-50"
+      aria-label="Volver al panel principal de configuración"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M10 22L0 12L10 2l1.775 1.775L3.55 12l8.225 8.225z" />
+      </svg>
+    </a>
+    <h1 class="uppercase text-3xl sm:text-4xl md:text-5xl font-extrabold text-center text-stone-900 leading-tight">
+      Configuración de Fuentes
+    </h1>
+  </div>
+
+  <!-- Vista previa de fuentes -->
+  <div class="bg-white rounded-xl shadow-lg p-6 sm:p-8 md:p-10 mb-8 sm:mb-12 border border-stone-200">
+    <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-center text-stone-800">Vista Previa de Fuentes</h2>
+    <div class="grid grid-cols-1 gap-8 sm:gap-10 items-center justify-items-center">
+      <div class="text-center w-full px-2">
+        <h3
+          [style.fontSize.px]="headlineSize"
+          [style.fontFamily]="titleFont"
+          class="font-bold mb-2 transition-all duration-300 ease-in-out text-3xl sm:text-4xl md:text-5xl"
+        >
+          Título Principal (Fuente Secundaria)
+        </h3>
+        <p class="text-xs sm:text-sm text-stone-500">Fuente de títulos: {{ getTitleFontName() }}</p>
+      </div>
+      <div class="text-center w-full px-2">
+        <h4
+          [style.fontSize.px]="subtitleSize"
+          [style.fontFamily]="bodyFont"
+          class="font-semibold mb-2 transition-all duration-300 ease-in-out text-xl sm:text-2xl md:text-3xl"
+        >
+          Subtítulo con Fuente Principal
+        </h4>
+        <p class="text-xs sm:text-sm text-stone-500">Fuente de cuerpo: {{ getBodyFontName() }}</p>
+      </div>
+      <div class="text-center w-full max-w-xl sm:max-w-2xl px-2">
+        <p
+          [style.fontSize.px]="paragraphSize"
+          [style.fontFamily]="bodyFont"
+          class="leading-relaxed transition-all duration-300 ease-in-out text-sm sm:text-base md:text-lg"
+        >
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        </p>
+        <p class="text-xs sm:text-sm text-stone-500 mt-2">Párrafo usando fuente principal.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ajustes de Tamaño -->
+  <div class="bg-white rounded-xl shadow-lg p-6 sm:p-8 md:p-10 mb-8 border border-stone-200">
+    <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-center text-stone-800">Ajustes de Tamaño</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8">
+      <div>
+        <label for="headlineSize" class="block text-sm font-medium text-stone-600 mb-2">
+          Tamaño de Título (px)
+        </label>
+        <input
+          type="number"
+          id="headlineSize"
+          [(ngModel)]="headlineSize"
+          min="16"
+          max="72"
+          class="w-full px-3 py-2 sm:py-2.5 border border-stone-300 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-stone-500 text-sm shadow-sm"
+        />
+      </div>
+      <div>
+        <label for="subtitleSize" class="block text-sm font-medium text-stone-600 mb-2">
+          Tamaño de Subtítulo (px)
+        </label>
+        <input
+          type="number"
+          id="subtitleSize"
+          [(ngModel)]="subtitleSize"
+          min="12"
+          max="48"
+          class="w-full px-3 py-2 sm:py-2.5 border border-stone-300 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-stone-500 text-sm shadow-sm"
+        />
+      </div>
+      <div>
+        <label for="paragraphSize" class="block text-sm font-medium text-stone-600 mb-2">
+          Tamaño de Párrafo (px)
+        </label>
+        <input
+          type="number"
+          id="paragraphSize"
+          [(ngModel)]="paragraphSize"
+          min="10"
+          max="24"
+          class="w-full px-3 py-2 sm:py-2.5 border border-stone-300 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-stone-500 text-sm shadow-sm"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- Selección de Fuentes del Sistema -->
+  <div class="bg-white rounded-xl shadow-lg p-6 sm:p-8 md:p-10 mb-8 border border-stone-200">
+    <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-center text-stone-800">Fuentes del Sistema</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Fuentes para Cuerpo -->
+      <div>
+        <h3 class="text-lg font-semibold text-stone-700 mb-4">Fuente Principal (Cuerpo)</h3>
+        <div class="space-y-2">
+          <label for="bodyFontSelect" class="block text-sm font-medium text-stone-600 mb-2">
+            Seleccionar fuente para cuerpo
+          </label>
+          <select
+            id="bodyFontSelect"
+            [(ngModel)]="bodyFont"
+            class="w-full px-3 py-2 sm:py-2.5 border border-stone-300 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-stone-500 text-sm bg-white pr-8 shadow-sm appearance-none"
+          >
+            <option *ngFor="let font of systemFonts" [value]="font.value">{{ font.name }}</option>
+            <option *ngFor="let font of customBodyFonts" [value]="font.fontFamily">
+              {{ font.name }} (Personalizada)
+            </option>
+          </select>
+        </div>
+      </div>
+      <!-- Fuentes para Títulos -->
+      <div>
+        <h3 class="text-lg font-semibold text-stone-700 mb-4">Fuente Secundaria (Títulos)</h3>
+        <div class="space-y-2">
+          <label for="titleFontSelect" class="block text-sm font-medium text-stone-600 mb-2">
+            Seleccionar fuente para títulos
+          </label>
+          <select
+            id="titleFontSelect"
+            [(ngModel)]="titleFont"
+            class="w-full px-3 py-2 sm:py-2.5 border border-stone-300 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-stone-500 text-sm bg-white pr-8 shadow-sm appearance-none"
+          >
+            <option *ngFor="let font of systemFonts" [value]="font.value">{{ font.name }}</option>
+            <option *ngFor="let font of customTitleFonts" [value]="font.fontFamily">
+              {{ font.name }} (Personalizada)
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subida de Fuentes Personalizadas -->
+  <div class="bg-white rounded-xl shadow-lg p-6 sm:p-8 md:p-10 mb-8 border border-stone-200">
+    <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-center text-stone-800">Subir Fuentes Personalizadas</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Fuente Principal (Cuerpo) -->
+      <div class="space-y-4">
+        <h3 class="text-lg font-semibold text-stone-700 text-center">Fuente Principal (Cuerpo)</h3>
+        <p class="text-sm text-stone-500 text-center">Se aplicará a subtítulos, párrafos y texto general</p>
+        <div class="flex flex-col items-center">
+          <label
+            for="primaryFontUpload"
+            class="text-sm sm:text-base font-medium text-stone-600 mb-4 bg-blue-50 hover:bg-blue-100 py-4 px-6 rounded-lg cursor-pointer transition-colors duration-200 border-2 border-dashed border-blue-300 w-full text-center"
+          >
+            <i class="fas fa-upload mr-2"></i> Subir Fuente Principal (.ttf)
+          </label>
+          <input
+            type="file"
+            id="primaryFontUpload"
+            accept=".ttf"
+            (change)="onPrimaryFontUpload($event)"
+            class="hidden"
+          />
+          <p *ngIf="primaryUploadMessage" class="mt-2 text-xs sm:text-sm text-center max-w-sm" [ngClass]="primaryUploadSuccess ? 'text-green-600' : 'text-red-600'">
+            {{ primaryUploadMessage }}
+          </p>
+        </div>
+      </div>
+      <!-- Fuente Secundaria (Títulos) -->
+      <div class="space-y-4">
+        <h3 class="text-lg font-semibold text-stone-700 text-center">Fuente Secundaria (Títulos)</h3>
+        <p class="text-sm text-stone-500 text-center">Se aplicará únicamente a los títulos principales</p>
+        <div class="flex flex-col items-center">
+          <label
+            for="secondaryFontUpload"
+            class="text-sm sm:text-base font-medium text-stone-600 mb-4 bg-green-50 hover:bg-green-100 py-4 px-6 rounded-lg cursor-pointer transition-colors duration-200 border-2 border-dashed border-green-300 w-full text-center"
+          >
+            <i class="fas fa-upload mr-2"></i> Subir Fuente Secundaria (.ttf)
+          </label>
+          <input
+            type="file"
+            id="secondaryFontUpload"
+            accept=".ttf"
+            (change)="onSecondaryFontUpload($event)"
+            class="hidden"
+          />
+          <p *ngIf="secondaryUploadMessage" class="mt-2 text-xs sm:text-sm text-center max-w-sm" [ngClass]="secondaryUploadSuccess ? 'text-green-600' : 'text-red-600'">
+            {{ secondaryUploadMessage }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Historial de Fuentes -->
+  <div class="bg-white rounded-xl shadow-lg p-6 sm:p-8 md:p-10 mb-8 border border-stone-200">
+    <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-center text-stone-800">Historial de Fuentes Personalizadas</h2>
+    <div class="overflow-x-auto">
+      <table class="w-full table-auto">
+        <thead>
+          <tr class="border-b border-stone-200">
+            <th class="text-left py-3 px-4 font-semibold text-stone-700">Nombre</th>
+            <th class="text-left py-3 px-4 font-semibold text-stone-700">Descripción</th>
+            <th class="text-left py-3 px-4 font-semibold text-stone-700">Tipo</th>
+            <th class="text-left py-3 px-4 font-semibold text-stone-700">Estado</th>
+            <th class="text-center py-3 px-4 font-semibold text-stone-700">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="fontHistory.length === 0">
+            <td colspan="5" class="text-center py-8 text-stone-500">No hay fuentes personalizadas cargadas</td>
+          </tr>
+          <tr *ngFor="let font of fontHistory">
+            <td class="py-4 px-4">
+              <div class="flex items-center space-x-3">
+                <i class="fas fa-font text-stone-400"></i>
+                <div>
+                  <p class="font-medium text-stone-900">{{ font.name }}</p>
+                  <p class="text-sm text-stone-500" [style.fontFamily]="font.fontFamily">
+                    Vista previa de la fuente
+                  </p>
+                </div>
+              </div>
+            </td>
+            <td class="py-4 px-4 text-stone-600">{{ font.description }}</td>
+            <td class="py-4 px-4">
+              <span class="px-2 py-1 rounded-full text-xs font-medium" [ngClass]="font.type === 'title' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'">
+                {{ font.type === 'title' ? 'Títulos' : 'Cuerpo' }}
+              </span>
+            </td>
+            <td class="py-4 px-4">
+              <div class="flex items-center space-x-2">
+                <i *ngIf="isActiveFontForType(font)" class="fas fa-check-circle text-green-500"></i>
+                <span class="text-sm font-medium" [ngClass]="isActiveFontForType(font) ? 'text-green-600' : 'text-stone-500'">
+                  {{ isActiveFontForType(font) ? 'Activa' : 'Inactiva' }}
+                </span>
+              </div>
+            </td>
+            <td class="py-4 px-4">
+              <div class="flex justify-center space-x-2">
+                <button
+                  (click)="selectFont(font)"
+                  [disabled]="isActiveFontForType(font)"
+                  class="px-3 py-1 rounded text-xs font-medium transition-colors"
+                  [ngClass]="isActiveFontForType(font) ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'"
+                >
+                  <i class="fas fa-check mr-1"></i>
+                  {{ isActiveFontForType(font) ? 'Activa' : 'Seleccionar' }}
+                </button>
+                <button
+                  (click)="showDeleteModal = true; fontToDelete = font"
+                  class="px-3 py-1 bg-red-500 text-white rounded text-xs font-medium hover:bg-red-600 transition-colors"
+                >
+                  <i class="fas fa-trash mr-1"></i>
+                  Eliminar
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal de confirmación para eliminar fuente -->
+  <div *ngIf="showDeleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6 transform transition-all">
+      <h3 class="text-lg font-medium text-stone-900 mb-4">Confirmar eliminación</h3>
+      <p class="text-stone-600 mb-6">
+        ¿Realmente desea eliminar la fuente <span class="font-semibold">{{ fontToDelete?.name }}</span>?
+      </p>
+      <div class="flex justify-end space-x-3">
+        <button (click)="showDeleteModal = false; fontToDelete = null" class="px-4 py-2 bg-stone-200 text-stone-800 rounded hover:bg-stone-300 transition-colors">
+          Cancelar
+        </button>
+        <button (click)="deleteFont(fontToDelete.id); showDeleteModal = false; fontToDelete = null" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors">
+          Eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+</section> 

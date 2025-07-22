@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { environment } from '../../../../../environments/environment';
@@ -32,7 +32,7 @@ export class ProfileWizardExpanded {
   successMsg: string | null = null;
   errorMsg: string | null = null;
 
-  constructor(private fb: FormBuilder) {
+  constructor(@Inject(FormBuilder) private fb: FormBuilder) {
     this.form = this.fb.group({
       // Paso 1
       firstName: [''],
@@ -229,6 +229,17 @@ export class ProfileWizardExpanded {
           updated[key] = updatedUser[key];
         }
       }
+      // FILTRAR: Omitir campos vacíos, null o undefined
+      Object.keys(updated).forEach(key => {
+        if (
+          updated[key] === '' ||
+          updated[key] === null ||
+          updated[key] === undefined ||
+          (typeof updated[key] === 'object' && updated[key] !== null && Object.keys(updated[key]).length === 0)
+        ) {
+          delete updated[key];
+        }
+      });
       if (Object.keys(updated).length === 0) {
         this.successMsg = 'No hay cambios para guardar.';
         setTimeout(() => this.successMsg = null, 2000);

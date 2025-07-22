@@ -9,10 +9,9 @@ import { FormsModule } from '@angular/forms';
 // Importar los componentes reales
 import { UsersListComponent } from '../../components/admin/userslist/userslist.component';
 import { UserDetailsComponent } from '../../components/admin/userdetails/userdetails.component';
-// Mantener los placeholders solo para UserProfile y UserMap
+import { UserProfile } from '../../components/users/user-profile/user-profile/user-profile';
+// Mantener el placeholder solo para UserMap
 import { Component as NgComponent, Input, Output, EventEmitter } from '@angular/core';
-@NgComponent({ selector: 'app-user-profile', standalone: true, template: '<div class="p-4 bg-white rounded shadow">UserProfile (placeholder)</div>' })
-export class UserProfile { @Input() user: any; @Input() status: any; }
 @NgComponent({ selector: 'app-user-map', standalone: true, template: '<div class="p-4 bg-white rounded shadow">UserMap (placeholder)</div>' })
 export class UserMap { @Input() latitude: number = 0; @Input() longitude: number = 0; @Input() userName: string = ''; }
 
@@ -87,6 +86,10 @@ export class Dashboard implements OnInit {
     if (typeof window === 'undefined') return false;
     const params = new URLSearchParams(window.location.search);
     return this.currentUser?.role === 'admin' && params.get('view') === 'admin';
+  }
+
+  get safeUserStatus(): 'active' | 'inactive' {
+    return this.userStatus === 'active' ? 'active' : 'inactive';
   }
 
   volverInicio() {

@@ -1,422 +1,231 @@
-<div class="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-  <div class="bg-white rounded-lg shadow-xl p-8 w-full max-w-4xl">
-    <div class="flex justify-between items-center mb-6 border-b pb-4">
-      <h2 class="text-2xl font-bold text-gray-800">Asistente de Perfil</h2>
-      <div class="text-gray-600">
-        Paso {{ currentStep }} de {{ steps.length }}
-      </div>
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+  <div class="bg-white rounded-lg shadow-2xl p-6 sm:p-6 max-md:w-full w-1/2 border border-gray-200 relative transition-all duration-300">
+    <!-- Botón cerrar -->
+    <button type="button" (click)="handleCancel()" class="absolute top-3 right-3 text-gray-400 hover:text-red-500 text-2xl font-bold focus:outline-none z-10" aria-label="Cerrar">
+      &times;
+    </button>
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-4 sm:mb-6 border-b pb-2 sm:pb-3 bg-gradient-to-r from-blue-50 to-white rounded-t-lg -mx-4 sm:-mx-6 px-4 sm:px-6 pt-2">
+      <h2 class="text-xl sm:text-2xl font-bold text-blue-700 flex items-center gap-2">
+        <i class="fas fa-user-edit"></i> Editar Perfil
+      </h2>
+      <div class="text-blue-500 text-xs sm:text-sm font-semibold">Paso {{ currentStep }} de {{ steps.length }}</div>
     </div>
-
-    <div class="mb-8">
-      <div class="flex justify-between items-center">
-        <ng-container *ngFor="let step of steps">
-          <div class="flex flex-col items-center">
+    <!-- Pasos visuales alineados y adaptables, sin línea de fondo -->
+    <div class="mb-4 sm:mb-6 w-full overflow-x-auto">
+      <div class="flex items-center justify-between min-w-[400px] sm:min-w-0 relative">
+        <ng-container *ngFor="let step of steps; let i = index">
+          <div class="flex-1 flex flex-col items-center z-10 min-w-[60px]">
             <div
-              class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold"
-              [ngClass]="currentStep >= step.id ? 'bg-blue-600' : 'bg-gray-300'"
+              class="w-8 h-8 rounded-full flex items-center justify-center text-white text-base font-bold border-2 border-blue-200 shadow transition-all duration-200"
+              [ngClass]="currentStep >= step.id ? 'bg-blue-600 border-blue-600' : 'bg-gray-300 border-gray-300'"
             >
-              <img *ngIf="step.icon" [src]="'assets/icons/' + step.icon" [alt]="step.title" class="w-5 h-5" />
+              <img *ngIf="step.icon" [src]="'assets/icons/' + step.icon" [alt]="step.title" class="w-5 h-5 object-contain" />
               <ng-container *ngIf="!step.icon">{{ step.id }}</ng-container>
             </div>
-            <div
-              class="text-sm mt-2 text-center"
-              [ngClass]="currentStep >= step.id ? 'text-blue-600' : 'text-gray-500'"
-            >
+            <div class="text-[10px] sm:text-xs mt-2 text-center font-medium whitespace-normal break-words max-w-[70px] sm:max-w-[100px]" [ngClass]="currentStep >= step.id ? 'text-blue-600' : 'text-gray-500'">
               {{ step.title }}
             </div>
           </div>
-        </ng-container>
-      </div>
-      <div class="flex justify-between mt-2">
-        <ng-container *ngFor="let step of steps; let i = index">
-          <div
-            class="flex-1 h-1"
-            [ngClass]="i < steps.length - 1 ? (currentStep > step.id ? 'bg-blue-600 mr-1' : 'bg-gray-300') : ''"
-          ></div>
+          <div *ngIf="i < steps.length - 1" class="flex-1"></div>
         </ng-container>
       </div>
     </div>
-
-    <form [formGroup]="form" class="mb-8 min-h-[300px]">
+    <!-- Mensajes de éxito y error -->
+    <div *ngIf="successMsg" class="mb-4 text-green-700 bg-green-100 border border-green-200 rounded px-4 py-2 text-center font-semibold animate-fade-in">{{ successMsg }}</div>
+    <div *ngIf="errorMsg" class="mb-4 text-red-700 bg-red-100 border border-red-200 rounded px-4 py-2 text-center font-semibold animate-fade-in">{{ errorMsg }}</div>
+    <!-- Formulario -->
+    <form [formGroup]="form" class="mb-4 min-h-[140px]">
       <ng-container [ngSwitch]="currentStep">
         <!-- Paso 1: Información Personal -->
-        <div *ngSwitchCase="1" class="space-y-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
-                Nombre <span class="text-red-500">*</span>
-              </label>
-              <input type="text" formControlName="firstName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ingresa tu nombre" />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
-                Apellido <span class="text-red-500">*</span>
-              </label>
-              <input type="text" formControlName="lastName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ingresa tu apellido" />
-            </div>
+        <div *ngSwitchCase="1" class="space-y-5">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Nombre <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="firstName" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="Nombre" />
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Apellido de Soltera</label>
-            <input type="text" formControlName="maidenName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Apellido de soltera (opcional)" />
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
-                Email <span class="text-red-500">*</span>
-              </label>
-              <input type="email" formControlName="email" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ejemplo@correo.com" />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
-                Teléfono <span class="text-red-500">*</span>
-              </label>
-              <input type="tel" formControlName="phone" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="+1234567890" />
-            </div>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Nombre de Usuario</label>
-              <input type="text" formControlName="username" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="usuario123" />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Contraseña</label>
-              <input type="password" formControlName="password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="••••••••" />
-            </div>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
-                Fecha de Nacimiento <span class="text-red-500">*</span>
-              </label>
-              <input type="date" formControlName="birthDate" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Edad (Calculada)</label>
-              <input type="number" formControlName="age" readonly class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600" placeholder="Se calcula automáticamente" />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
-                Género <span class="text-red-500">*</span>
-              </label>
-              <select formControlName="gender" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option value="">Seleccionar</option>
-                <option value="male">Masculino</option>
-                <option value="female">Femenino</option>
-              </select>
-            </div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Apellido <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="lastName" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="Apellido" />
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Foto de Perfil</label>
-            <input type="url" formControlName="image" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="URL de la imagen" />
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Email <span class="text-red-500">*</span></label>
+            <input type="email" formControlName="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="ejemplo@correo.com" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Teléfono <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="phone" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="Teléfono" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Fecha de Nacimiento <span class="text-red-500">*</span></label>
+            <input type="date" formControlName="birthDate" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Género <span class="text-red-500">*</span></label>
+            <select formControlName="gender" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base">
+              <option value="">Seleccionar</option>
+              <option value="male">Masculino</option>
+              <option value="female">Femenino</option>
+            </select>
           </div>
         </div>
         <!-- Paso 2: Información Física -->
-        <div *ngSwitchCase="2" class="space-y-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
-                Altura (cm) <span class="text-red-500">*</span>
-              </label>
-              <input type="number" min="100" max="250" formControlName="height" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="170" />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
-                Peso (kg) <span class="text-red-500">*</span>
-              </label>
-              <input type="number" min="30" max="300" formControlName="weight" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="70" />
-            </div>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de Sangre</label>
-              <select formControlName="bloodGroup" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option value="">Seleccionar</option>
-                <option value="A+">A+</option>
-                <option value="A-">A-</option>
-                <option value="B+">B+</option>
-                <option value="B-">B-</option>
-                <option value="AB+">AB+</option>
-                <option value="AB-">AB-</option>
-                <option value="O+">O+</option>
-                <option value="O-">O-</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Color de Ojos</label>
-              <select formControlName="eyeColor" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option value="">Seleccionar</option>
-                <option value="Brown">Café</option>
-                <option value="Blue">Azul</option>
-                <option value="Green">Verde</option>
-                <option value="Hazel">Avellana</option>
-                <option value="Gray">Gris</option>
-                <option value="Amber">Ámbar</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Color de Cabello</label>
-              <select formControlName="hairColor" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option value="">Seleccionar</option>
-                <option value="Black">Negro</option>
-                <option value="Brown">Café</option>
-                <option value="Blonde">Rubio</option>
-                <option value="Red">Pelirrojo</option>
-                <option value="Gray">Gris</option>
-                <option value="White">Blanco</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de Cabello</label>
-              <select formControlName="hairType" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option value="">Seleccionar</option>
-                <option value="Straight">Liso</option>
-                <option value="Wavy">Ondulado</option>
-                <option value="Curly">Rizado</option>
-                <option value="Kinky">Muy Rizado</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <!-- Paso 3: Información Profesional -->
-        <div *ngSwitchCase="3" class="space-y-6">
+        <div *ngSwitchCase="2" class="space-y-5">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              Universidad <span class="text-red-500">*</span>
-            </label>
-            <input type="text" formControlName="university" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors border-gray-300" placeholder="Nombre de la universidad" />
-          </div>
-          <div class="border-t pt-6">
-            <h4 class="text-lg font-medium text-gray-900 mb-4">Información Laboral</h4>
-            <div class="space-y-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Empresa</label>
-                <input type="text" formControlName="company" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nombre de la empresa" />
-              </div>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Departamento</label>
-                  <input type="text" formControlName="department" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ej: Desarrollo, Marketing" />
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Título de Trabajo</label>
-                  <input type="text" formControlName="title" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ej: Desarrollador Senior" />
-                </div>
-              </div>
-              <div class="border-t pt-6">
-                <h4 class="text-lg font-medium text-gray-900 mb-4">Dirección de la Empresa</h4>
-                <div class="space-y-4">
-                  <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Dirección</label>
-                    <input type="text" formControlName="companyAddress" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Calle y número de la empresa" />
-                  </div>
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label class="block text-sm font-medium text-gray-700 mb-2">Ciudad</label>
-                      <input type="text" formControlName="companyCity" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ciudad de la empresa" />
-                    </div>
-                    <div>
-                      <label class="block text-sm font-medium text-gray-700 mb-2">Estado</label>
-                      <input type="text" formControlName="companyState" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Estado de la empresa" />
-                    </div>
-                  </div>
-                  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div>
-                      <label class="block text-sm font-medium text-gray-700 mb-2">Código de Estado</label>
-                      <input type="text" formControlName="companyStateCode" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ej: CA, TX" />
-                    </div>
-                    <div>
-                      <label class="block text-sm font-medium text-gray-700 mb-2">Código Postal</label>
-                      <input type="text" formControlName="companyPostalCode" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="12345" />
-                    </div>
-                    <div>
-                      <label class="block text-sm font-medium text-gray-700 mb-2">País</label>
-                      <input type="text" formControlName="companyCountry" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="País de la empresa" />
-                    </div>
-                  </div>
-                  <!-- Para companyCoordinates -->
-                  <div [formGroup]="companyCoordinatesGroup">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Latitud</label>
-                        <input type="number" formControlName="lat" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="19.4326" />
-                      </div>
-                      <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Longitud</label>
-                        <input type="number" formControlName="lng" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="-99.1332" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Paso 4: Dirección Personal -->
-        <div *ngSwitchCase="4" class="space-y-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">Dirección Personal</h3>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              Dirección <span class="text-red-500">*</span>
-            </label>
-            <input type="text" formControlName="address" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Calle y número" />
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Ciudad</label>
-              <input type="text" formControlName="city" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ciudad" />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Estado</label>
-              <input type="text" formControlName="state" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Estado" />
-            </div>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Código de Estado</label>
-              <input type="text" formControlName="stateCode" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ej: CA, TX" />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Código Postal</label>
-              <input type="text" formControlName="postalCode" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="12345" />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">País</label>
-              <input type="text" formControlName="country" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="País" />
-            </div>
-          </div>
-          <!-- Para coordinates -->
-          <div [formGroup]="coordinatesGroup">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Latitud</label>
-                <input type="number" formControlName="lat" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="19.4326" />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Longitud</label>
-                <input type="number" formControlName="lng" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="-99.1332" />
-              </div>
-            </div>
-          </div>
-          <button type="button" (click)="getCurrentLocation()" [disabled]="isLoadingLocation" class="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors" [ngClass]="isLoadingLocation ? 'opacity-50 cursor-not-allowed' : ''">
-            <span *ngIf="isLoadingLocation">Cargando ubicación...</span>
-            <span *ngIf="!isLoadingLocation">Obtener Ubicación Actual</span>
-          </button>
-          <!-- Placeholder para UserMap -->
-          <div class="mt-4 bg-gray-100 border border-dashed border-gray-400 rounded p-4 text-center text-gray-500">
-            [Mapa de usuario aquí]
-          </div>
-        </div>
-        <!-- Paso 5: Información Bancaria -->
-        <div *ngSwitchCase="5" class="space-y-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">Información Bancaria</h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Número de Tarjeta</label>
-              <input type="text" formControlName="cardNumber" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="1234 5678 9012 3456" />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Fecha de Expiración</label>
-              <input type="text" formControlName="cardExpire" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="MM/YY" />
-            </div>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de Tarjeta</label>
-              <select formControlName="cardType" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option value="">Seleccionar</option>
-                <option value="Visa">Visa</option>
-                <option value="Mastercard">Mastercard</option>
-                <option value="American Express">American Express</option>
-                <option value="Elo">Elo</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Moneda</label>
-              <input type="text" formControlName="currency" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="USD, EUR, CNY" />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">IBAN</label>
-              <input type="text" formControlName="iban" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="IBAN" />
-            </div>
-          </div>
-        </div>
-        <!-- Paso 6: Información Técnica y Legal -->
-        <div *ngSwitchCase="6" class="space-y-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">Información Técnica y Legal</h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Dirección IP</label>
-              <input type="text" formControlName="ip" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="192.168.1.1" />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Dirección MAC</label>
-              <input type="text" formControlName="macAddress" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="00:1B:44:11:3A:B7" />
-            </div>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">SSN</label>
-              <input type="text" formControlName="ssn" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="123-45-6789" />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">EIN</label>
-              <input type="text" formControlName="ein" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="12-3456789" />
-            </div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Altura (cm) <span class="text-red-500">*</span></label>
+            <input type="number" min="100" max="250" formControlName="height" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="170" />
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">User Agent</label>
-            <textarea formControlName="userAgent" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" rows="3" placeholder="Mozilla/5.0 (Windows NT 10.0; Win64; x64)..."></textarea>
-          </div>
-        </div>
-        <!-- Paso 7: Criptomonedas y Sistema -->
-        <div *ngSwitchCase="7" class="space-y-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">Criptomonedas y Sistema</h3>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Criptomoneda</label>
-              <select formControlName="cryptoCoin" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option value="">Seleccionar</option>
-                <option value="Bitcoin">Bitcoin</option>
-                <option value="Ethereum">Ethereum</option>
-                <option value="Litecoin">Litecoin</option>
-                <option value="Dogecoin">Dogecoin</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Wallet</label>
-              <input type="text" formControlName="cryptoWallet" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="0x..." />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Network</label>
-              <input type="text" formControlName="cryptoNetwork" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ej: ERC-20, BEP-20" />
-            </div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Peso (kg) <span class="text-red-500">*</span></label>
+            <input type="number" min="30" max="300" formControlName="weight" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="70" />
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Rol del Usuario</label>
-            <input type="text" formControlName="role" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ej: Administrador, Usuario" />
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Color de Cabello <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="hairColor" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="Ej: Brown" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Tipo de Cabello <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="hairType" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="Ej: Curly" />
+          </div>
+        </div>
+        <!-- Paso 3: Información Profesional (universidad, empresa) -->
+        <div *ngSwitchCase="3" class="space-y-5">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Universidad</label>
+            <input type="text" formControlName="university" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="Universidad" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Empresa <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="company" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="Empresa" />
+          </div>
+        </div>
+        <!-- Paso 4: Dirección de la Empresa y datos laborales -->
+        <div *ngSwitchCase="4" class="space-y-5">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Departamento <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="department" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="Departamento" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Título <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="title" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="Título" />
+          </div>
+          <div class="border-t pt-4">
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Dirección de la Empresa <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="companyAddress" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="Calle y número" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Ciudad Empresa <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="companyCity" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="Ciudad" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Estado Empresa <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="companyState" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="Estado" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Código Estado Empresa <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="companyStateCode" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="Ej: CA, TX" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Código Postal Empresa <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="companyPostalCode" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="12345" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">País Empresa <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="companyCountry" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="País" />
+          </div>
+        </div>
+        <!-- Paso 5: Dirección Personal -->
+        <div *ngSwitchCase="5" class="space-y-5">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Dirección <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="address" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="Calle y número" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Ciudad <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="city" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="Ciudad" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Estado <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="state" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="Estado" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Código de Estado <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="stateCode" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="Ej: CA, TX" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Código Postal <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="postalCode" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="12345" />
+          </div>
+        </div>
+        <!-- Paso 6: Información Bancaria -->
+        <div *ngSwitchCase="6" class="space-y-5">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Número de Tarjeta <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="cardNumber" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="1234 5678 9012 3456" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Fecha de Expiración <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="cardExpire" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="MM/YY" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Tipo de Tarjeta <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="cardType" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="Visa, Mastercard..." />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Moneda <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="currency" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="USD, EUR..." />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">IBAN <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="iban" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="IBAN" />
+          </div>
+        </div>
+        <!-- Paso 7: Información Técnica -->
+        <div *ngSwitchCase="7" class="space-y-5">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Dirección IP</label>
+            <input type="text" formControlName="ip" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="192.168.1.1" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">MAC</label>
+            <input type="text" formControlName="macAddress" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="00:1B:44:11:3A:B7" />
+          </div>
+        </div>
+        <!-- Paso 8: Cripto -->
+        <div *ngSwitchCase="8" class="space-y-5">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Criptomoneda <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="cryptoCoin" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="Bitcoin, Ethereum..." />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Wallet <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="cryptoWallet" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="0x..." />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Network <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="cryptoNetwork" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-base" placeholder="Ej: ERC-20, BEP-20" />
           </div>
         </div>
       </ng-container>
     </form>
-
-    <div class="flex justify-between mt-8">
-      <button type="button" (click)="prevStep()" [disabled]="currentStep === 1" class="flex items-center px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 disabled:text-gray-400 disabled:border-gray-200 disabled:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+    <!-- Botones -->
+    <div class="flex justify-between mt-6">
+      <button type="button" (click)="prevStep()" [disabled]="currentStep === 1" class="flex items-center px-5 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:text-gray-400 disabled:border-gray-200 disabled:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-base font-semibold">
         <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
         Anterior
       </button>
       <div class="flex space-x-3">
-        <button type="button" (click)="handleCancel()" class="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors">
+        <button type="button" (click)="handleCancel()" class="px-5 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-base font-semibold">
           Cancelar
         </button>
-        <button *ngIf="currentStep < steps.length" type="button" (click)="nextStep()" class="flex items-center px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+        <button *ngIf="currentStep < steps.length" type="button" (click)="nextStep()" class="flex items-center px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-base font-semibold">
           Siguiente
           <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>
         </button>
-        <button *ngIf="currentStep === steps.length" type="button" (click)="handleSave()" class="px-6 py-2 bg-stone-700 text-white rounded-md hover:bg-stone-800 transition-colors">
+        <button *ngIf="currentStep === steps.length" type="button" (click)="handleSave()" class="px-5 py-2 bg-stone-700 text-white rounded-lg hover:bg-stone-800 transition-colors text-base font-semibold">
           Guardar Perfil
         </button>
       </div>

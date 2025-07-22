@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-profile-wizard-expanded',
@@ -28,6 +29,8 @@ export class ProfileWizardExpanded {
   form: FormGroup;
   isLoadingLocation = false;
   errors: any = {};
+  successMsg: string | null = null;
+  errorMsg: string | null = null;
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
@@ -137,11 +140,124 @@ export class ProfileWizardExpanded {
   handleCancel() {
     this.onCancel.emit();
   }
-  handleSave() {
+  async handleSave() {
     if (this.form.valid) {
-      this.onSave.emit(this.form.value);
+      const formValue = this.form.value;
+      // Transformar datos a la estructura esperada por el backend
+      const address = {
+        address: this.user?.address?.address || '',
+        city: formValue.city || this.user?.address?.city || '',
+        state: this.user?.address?.state || '',
+        stateCode: this.user?.address?.stateCode || '',
+        postalCode: this.user?.address?.postalCode || '',
+        country: formValue.country || this.user?.address?.country || '',
+        coordinates: this.user?.address?.coordinates || {},
+      };
+      const company = {
+        name: formValue.company || this.user?.company?.name || '',
+        department: this.user?.company?.department || '',
+        title: this.user?.company?.title || '',
+        address: {
+          address: this.user?.company?.address?.address || '',
+          city: this.user?.company?.address?.city || '',
+          state: this.user?.company?.address?.state || '',
+          stateCode: this.user?.company?.address?.stateCode || '',
+          postalCode: this.user?.company?.address?.postalCode || '',
+          country: this.user?.company?.address?.country || '',
+          coordinates: this.user?.company?.address?.coordinates || {},
+        }
+      };
+      const bank = {
+        cardExpire: this.user?.bank?.cardExpire || '',
+        cardNumber: formValue.cardNumber || this.user?.bank?.cardNumber || '',
+        cardType: this.user?.bank?.cardType || '',
+        currency: this.user?.bank?.currency || '',
+        iban: this.user?.bank?.iban || '',
+      };
+      const hair = {
+        color: this.user?.hair?.color || '',
+        type: this.user?.hair?.type || '',
+      };
+      const crypto = {
+        coin: this.user?.crypto?.coin || '',
+        wallet: formValue.cryptoWallet || this.user?.crypto?.wallet || '',
+        network: this.user?.crypto?.network || '',
+      };
+      // Formatear phone a internacional
+      let phone = formValue.phone || this.user?.phone || '';
+      if (phone && !phone.startsWith('+')) {
+        phone = '+58 ' + phone.replace(/^0+/, '');
+      }
+      // Armar el objeto final
+      const updatedUser: any = {
+        firstName: formValue.firstName,
+        lastName: formValue.lastName,
+        maidenName: formValue.maidenName || '',
+        email: formValue.email,
+        phone,
+        username: formValue.username || '',
+        password: formValue.password || '',
+        birthDate: formValue.birthDate,
+        age: Number(formValue.age) || this.user?.age || 0,
+        gender: formValue.gender,
+        image: formValue.image || '',
+        height: formValue.height,
+        weight: formValue.weight,
+        bloodGroup: formValue.bloodGroup || '',
+        eyeColor: formValue.eyeColor || '',
+        hair,
+        university: formValue.university || '',
+        company,
+        address,
+        bank,
+        ein: formValue.ein || '',
+        ssn: formValue.ssn || '',
+        ip: formValue.ip || '',
+        macAddress: formValue.macAddress || '',
+        userAgent: formValue.userAgent || '',
+        crypto,
+        role: formValue.role || '',
+      };
+      // Solo enviar los campos que cambiaron
+      const updated: any = {};
+      for (const key of Object.keys(updatedUser)) {
+        if (typeof updatedUser[key] === 'object' && updatedUser[key] !== null) {
+          if (JSON.stringify(updatedUser[key]) !== JSON.stringify(this.user?.[key])) {
+            updated[key] = updatedUser[key];
+          }
+        } else if (updatedUser[key] !== (this.user?.[key] ?? '')) {
+          updated[key] = updatedUser[key];
+        }
+      }
+      if (Object.keys(updated).length === 0) {
+        this.successMsg = 'No hay cambios para guardar.';
+        setTimeout(() => this.successMsg = null, 2000);
+        this.onSave.emit(this.user);
+        return;
+      }
+      try {
+        const token = localStorage.getItem('token');
+        const res = await fetch(`${environment.BACKEND_URL}/api/users/${this.user.id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify(updated)
+        });
+        if (!res.ok) throw new Error('No se pudo guardar el perfil');
+        const newUser = await res.json();
+        this.successMsg = 'Perfil guardado correctamente.';
+        setTimeout(() => this.successMsg = null, 2000);
+        this.onSave.emit(newUser);
+      } catch (e) {
+        this.errorMsg = 'Error al guardar el perfil';
+        setTimeout(() => this.errorMsg = null, 2000);
+      }
     } else {
       this.form.markAllAsTouched();
+      this.errorMsg = 'Por favor completa los campos requeridos.';
+      setTimeout(() => this.errorMsg = null, 2000);
     }
   }
   // Placeholder para obtener ubicación

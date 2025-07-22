@@ -7,13 +7,29 @@
           Total: <span class="font-semibold text-blue-700">{{ users.length }}</span>
         </p>
       </div>
-      <button
-        class="bg-blue-600 text-white px-5 py-2 rounded-lg shadow hover:bg-blue-700 transition-colors text-base font-semibold flex items-center gap-2"
-        (click)="openCreateModal()"
-      >
-        <i class="fas fa-user-plus"></i>
-        <span>Agregar usuario</span>
-      </button>
+      <div class="flex items-center gap-2">
+        <button
+          class="bg-blue-600 text-white px-5 py-2 rounded-lg shadow hover:bg-blue-700 transition-colors text-base font-semibold flex items-center gap-2"
+          (click)="openCreateModal()"
+        >
+          <i class="fas fa-user-plus"></i>
+          <span>Agregar usuario</span>
+        </button>
+        <button
+          class="bg-green-600 text-white px-5 py-2 rounded-lg shadow hover:bg-green-700 transition-colors text-base font-semibold flex items-center gap-2 ml-2"
+          (click)="exportToExcel()"
+        >
+          <i class="fas fa-file-excel"></i>
+          <span>Descargar Excel</span>
+        </button>
+        <button
+          class="bg-red-600 text-white px-5 py-2 rounded-lg shadow hover:bg-red-700 transition-colors text-base font-semibold flex items-center gap-2 ml-2"
+          (click)="exportToPDF()"
+        >
+          <i class="fas fa-file-pdf"></i>
+          <span>Descargar PDF</span>
+        </button>
+      </div>
     </div>
   </div>
   <app-user-create-modal

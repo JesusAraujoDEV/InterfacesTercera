@@ -1,219 +1,160 @@
-<div class="space-y-6">
-  <!-- Wizard de edición -->
-  <app-profile-wizard-expanded
-    *ngIf="isEditing"
-    [user]="user"
-    (onSave)="handleProfileUpdate($event)"
-    (onCancel)="handleCancel()"
-  />
+<div class="space-y-8 relative">
+  <!-- Modal Wizard -->
+  <div *ngIf="isEditing" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
+    <div class="w-full max-w-3xl bg-white rounded-2xl shadow-2xl p-0 md:p-8 relative animate-fade-in">
+      <app-profile-wizard-expanded
+        [user]="user"
+        (onSave)="handleProfileUpdate($event)"
+        (onCancel)="handleCancel()"
+      ></app-profile-wizard-expanded>
+    </div>
+  </div>
 
-  <!-- Vista de perfil -->
-<ng-container *ngIf="!isEditing">
-    <!-- Loading tangram -->
-    <app-tangram-loading *ngIf="!user"></app-tangram-loading>
-    <div *ngIf="user" class="bg-white rounded-lg shadow">
-      <div class="px-6 py-6 border-b border-gray-200">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-          <div class="flex items-center space-x-4">
-            <img
-              [src]="user?.image || '/placeholder.svg?height=80&width=80'"
-              [alt]="user?.firstName + ' ' + user?.lastName"
-              class="w-20 h-20 rounded-full object-cover ring-4 ring-blue-50"
-            />
-            <div>
-              <h2 class="text-2xl font-bold text-gray-900">
-                {{ user?.firstName }} {{ user?.lastName }}
-              </h2>
-              <p class="text-gray-600 flex items-center gap-2">
-                {{ user?.email }}
-                <span *ngIf="status === 'active'" class="ml-2 px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-xs font-semibold">Activo</span>
-                <span *ngIf="status === 'inactive'" class="ml-2 px-2 py-0.5 rounded-full bg-red-100 text-red-700 text-xs font-semibold">Inactivo</span>
-              </p>
-              <p class="text-sm text-gray-500">{{ user?.phone }}</p>
-              <div class="flex items-center mt-2 space-x-2">
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                  Perfil completado: {{ percentComplete }}%
-                </span>
-              </div>
-              <div class="flex items-center mt-2 space-x-2">
-                <span class="text-xs text-gray-500">ID: {{ user?.id }}</span>
-                <span *ngIf="status === 'active'" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Activo</span>
-                <span *ngIf="status === 'inactive'" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">Inactivo</span>
-              </div>
+  <!-- Perfil principal y tabs (deshabilitados visualmente si isEditing) -->
+  <div [class.opacity-30]="isEditing" [class.pointer-events-none]="isEditing">
+    <!-- Perfil principal -->
+    <div class="bg-white rounded-2xl shadow-xl p-8 flex flex-col md:flex-row items-center md:items-start gap-8">
+      <img
+        [src]="user?.image || '/placeholder.svg?height=120&width=120'"
+        [alt]="user?.firstName + ' ' + user?.lastName"
+        class="w-32 h-32 rounded-full object-cover ring-4 ring-blue-100 shadow"
+      />
+      <div class="flex-1 space-y-2">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+          <div>
+            <h2 class="text-3xl font-bold text-gray-900 flex items-center gap-2">
+              {{ user?.firstName }} {{ user?.lastName }}
+              <span *ngIf="status === 'active'" class="ml-2 px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold flex items-center gap-1">
+                <i class="fas fa-check-circle"></i> Activo
+              </span>
+              <span *ngIf="status === 'inactive'" class="ml-2 px-3 py-1 rounded-full bg-red-100 text-red-700 text-xs font-bold flex items-center gap-1">
+                <i class="fas fa-times-circle"></i> Inactivo
+              </span>
+            </h2>
+            <div class="flex items-center gap-3 mt-1 text-gray-500">
+              <i class="fas fa-envelope"></i> <span>{{ user?.email }}</span>
+              <i class="fas fa-phone-alt ml-4"></i> <span>{{ user?.phone }}</span>
             </div>
           </div>
-          <div class="mt-4 sm:mt-0">
-            <button
-              (click)="isEditing = true"
-              class="w-full sm:w-auto bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors font-medium"
-            >
-              Editar Perfil
-            </button>
-          </div>
+          <button
+            (click)="isEditing = true"
+            class="mt-4 md:mt-0 bg-blue-600 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-700 transition-colors font-semibold flex items-center gap-2"
+          >
+            <i class="fas fa-edit"></i> Editar Perfil
+          </button>
+        </div>
+        <div class="flex items-center gap-4 mt-2">
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 shadow">
+            <i class="fas fa-tasks mr-1"></i> Perfil completado: {{ percentComplete }}%
+          </span>
+          <span class="text-xs text-gray-400">ID: {{ user?.id }}</span>
         </div>
       </div>
-      <!-- Navegación de secciones -->
-      <div class="border-b border-gray-200">
-        <nav class="flex space-x-8 px-6">
-          <button
-            (click)="activeSection = 'personal'"
-            class="py-4 px-1 border-b-2 font-medium text-sm transition-colors"
-            [ngClass]="activeSection === 'personal' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
-          >
-            Información Personal
-          </button>
-          <button
-            (click)="activeSection = 'professional'"
-            class="py-4 px-1 border-b-2 font-medium text-sm transition-colors"
-            [ngClass]="activeSection === 'professional' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
-          >
-            Información Profesional
-          </button>
-          <button
-            (click)="activeSection = 'location'"
-            class="py-4 px-1 border-b-2 font-medium text-sm transition-colors"
-            [ngClass]="activeSection === 'location' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
-          >
-            Ubicación
-          </button>
-        </nav>
+    </div>
+
+    <!-- Tabs de navegación -->
+    <div class="w-full border-b border-gray-200">
+      <nav class="flex space-x-8 px-2 md:px-8">
+        <button
+          (click)="activeSection = 'personal'"
+          class="py-3 px-1 border-b-2 font-semibold text-base transition-colors"
+          [ngClass]="activeSection === 'personal' ? 'border-blue-600 text-blue-700' : 'border-transparent text-gray-500 hover:text-blue-600 hover:border-blue-200'"
+        >
+          <i class="fas fa-user mr-1"></i> Personal
+        </button>
+        <button
+          (click)="activeSection = 'professional'"
+          class="py-3 px-1 border-b-2 font-semibold text-base transition-colors"
+          [ngClass]="activeSection === 'professional' ? 'border-blue-600 text-blue-700' : 'border-transparent text-gray-500 hover:text-blue-600 hover:border-blue-200'"
+        >
+          <i class="fas fa-briefcase mr-1"></i> Profesional
+        </button>
+        <button
+          (click)="activeSection = 'location'"
+          class="py-3 px-1 border-b-2 font-semibold text-base transition-colors"
+          [ngClass]="activeSection === 'location' ? 'border-blue-600 text-blue-700' : 'border-transparent text-gray-500 hover:text-blue-600 hover:border-blue-200'"
+        >
+          <i class="fas fa-map-marker-alt mr-1"></i> Ubicación
+        </button>
+      </nav>
+    </div>
+
+    <!-- Secciones -->
+    <div class="p-4 md:p-8 bg-white rounded-2xl shadow space-y-8">
+      <!-- Personal -->
+      <div *ngIf="activeSection === 'personal'" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="space-y-4">
+          <h3 class="text-lg font-bold text-blue-700 mb-2">Datos Básicos</h3>
+          <div><span class="font-medium">Nacimiento:</span> {{ user?.birthDate || 'No especificado' }}</div>
+          <div><span class="font-medium">Género:</span> {{ user?.gender || 'No especificado' }}</div>
+          <div><span class="font-medium">Edad:</span> {{ user?.age || 'No especificado' }} años</div>
+          <div><span class="font-medium">Tipo de Sangre:</span> {{ user?.bloodGroup || 'No especificado' }}</div>
+        </div>
+        <div class="space-y-4">
+          <h3 class="text-lg font-bold text-blue-700 mb-2">Datos Físicos</h3>
+          <div><span class="font-medium">Altura:</span> {{ user?.height || 'No especificado' }} cm</div>
+          <div><span class="font-medium">Peso:</span> {{ user?.weight || 'No especificado' }} kg</div>
+          <div><span class="font-medium">Ojos:</span> {{ user?.eyeColor || 'No especificado' }}</div>
+          <div><span class="font-medium">Cabello:</span> {{ user?.hair?.color || 'No especificado' }}</div>
+        </div>
       </div>
-      <!-- Contenido de las secciones -->
-      <div class="p-6">
-        <div *ngIf="activeSection === 'personal'" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="space-y-4">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">Datos Básicos</h3>
-            <div>
-              <label class="block text-sm font-medium text-gray-700">Fecha de Nacimiento</label>
-              <p class="mt-1 text-sm text-gray-900">{{ user?.birthDate || 'No especificado' }}</p>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700">Género</label>
-              <p class="mt-1 text-sm text-gray-900 capitalize">{{ user?.gender || 'No especificado' }}</p>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700">Edad</label>
-              <p class="mt-1 text-sm text-gray-900">{{ user?.age || 'No especificado' }} años</p>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700">Tipo de Sangre</label>
-              <p class="mt-1 text-sm text-gray-900">{{ user?.bloodGroup || 'No especificado' }}</p>
-            </div>
-          </div>
-          <div class="space-y-4">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">Datos Físicos</h3>
-            <div>
-              <label class="block text-sm font-medium text-gray-700">Altura</label>
-              <p class="mt-1 text-sm text-gray-900">{{ user?.height || 'No especificado' }} cm</p>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700">Peso</label>
-              <p class="mt-1 text-sm text-gray-900">{{ user?.weight || 'No especificado' }} kg</p>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700">Color de Ojos</label>
-              <p class="mt-1 text-sm text-gray-900 capitalize">{{ user?.eyeColor || 'No especificado' }}</p>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700">Color de Cabello</label>
-              <p class="mt-1 text-sm text-gray-900 capitalize">{{ user?.hair?.color || 'No especificado' }}</p>
-            </div>
-          </div>
+      <!-- Profesional -->
+      <div *ngIf="activeSection === 'professional'" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="space-y-4">
+          <h3 class="text-lg font-bold text-blue-700 mb-2">Académico</h3>
+          <div><span class="font-medium">Universidad:</span> {{ user?.university || 'No especificado' }}</div>
         </div>
-        <div *ngIf="activeSection === 'professional'" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="space-y-4">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">Información Académica</h3>
-            <div>
-              <label class="block text-sm font-medium text-gray-700">Universidad</label>
-              <p class="mt-1 text-sm text-gray-900">{{ user?.university || 'No especificado' }}</p>
-            </div>
-          </div>
-          <div class="space-y-4">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">Información Laboral</h3>
-            <div>
-              <label class="block text-sm font-medium text-gray-700">Empresa</label>
-              <p class="mt-1 text-sm text-gray-900">{{ user?.company?.name || 'No especificado' }}</p>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700">Departamento</label>
-              <p class="mt-1 text-sm text-gray-900">{{ user?.company?.department || 'No especificado' }}</p>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700">Título de Trabajo</label>
-              <p class="mt-1 text-sm text-gray-900">{{ user?.company?.title || 'No especificado' }}</p>
-            </div>
-          </div>
+        <div class="space-y-4">
+          <h3 class="text-lg font-bold text-blue-700 mb-2">Laboral</h3>
+          <div><span class="font-medium">Empresa:</span> {{ user?.company?.name || 'No especificado' }}</div>
+          <div><span class="font-medium">Departamento:</span> {{ user?.company?.department || 'No especificado' }}</div>
+          <div><span class="font-medium">Título:</span> {{ user?.company?.title || 'No especificado' }}</div>
         </div>
-        <div *ngIf="activeSection === 'location'" class="space-y-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="space-y-4">
-              <h3 class="text-lg font-medium text-gray-900 mb-4">Dirección</h3>
-              <div>
-                <label class="block text-sm font-medium text-gray-700">Dirección Completa</label>
-                <p class="mt-1 text-sm text-gray-900">
-                  {{ user?.address?.address || 'No especificado' }}<br />
-                  <ng-container *ngIf="user?.address?.city && user?.address?.state">
-                    {{ user?.address?.city }}, {{ user?.address?.state }}<br />
-                  </ng-container>
-                  <ng-container *ngIf="user?.address?.postalCode">
-                    CP: {{ user?.address?.postalCode }}<br />
-                  </ng-container>
-                  <ng-container *ngIf="user?.address?.stateCode">
-                    Estado: {{ user?.address?.stateCode }}<br />
-                  </ng-container>
-                  <ng-container *ngIf="user?.address?.country">
-                    País: {{ user?.address?.country }}<br />
-                  </ng-container>
-                </p>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700">Dirección MAC</label>
-                <p class="mt-1 text-sm text-gray-900">
-                  {{ user?.macAddress || 'No especificado' }}
-                </p>
-              </div>
-            </div>
-            <div class="space-y-4">
-              <h3 class="text-lg font-medium text-gray-900 mb-4">Coordenadas GPS</h3>
-              <div>
-                <label class="block text-sm font-medium text-gray-700">Ubicación</label>
-                <p class="mt-1 text-sm text-gray-900">
-                  <ng-container *ngIf="user?.address?.coordinates?.lat && user?.address?.coordinates?.lng; else noCoords">
-                    Latitud: {{ user?.address?.coordinates?.lat }}<br />
-                    Longitud: {{ user?.address?.coordinates?.lng }}
-                  </ng-container>
-                  <ng-template #noCoords>No especificado</ng-template>
-                </p>
-              </div>
-            </div>
-          </div>
-          <!-- Placeholder para UserMap -->
-          <div *ngIf="user?.address?.coordinates?.lat && user?.address?.coordinates?.lng" class="mt-6">
-            <div class="bg-gray-100 border border-dashed border-gray-400 rounded p-4 text-center text-gray-500">
-              [Mapa de usuario aquí]
-            </div>
+      </div>
+      <!-- Ubicación -->
+      <div *ngIf="activeSection === 'location'" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="space-y-4">
+          <h3 class="text-lg font-bold text-blue-700 mb-2">Dirección</h3>
+          <div><span class="font-medium">Dirección:</span> {{ user?.address?.address || 'No especificado' }}</div>
+          <div><span class="font-medium">Ciudad:</span> {{ user?.address?.city || 'No especificado' }}</div>
+          <div><span class="font-medium">Estado:</span> {{ user?.address?.state || 'No especificado' }}</div>
+          <div><span class="font-medium">País:</span> {{ user?.address?.country || 'No especificado' }}</div>
+          <div><span class="font-medium">CP:</span> {{ user?.address?.postalCode || 'No especificado' }}</div>
+          <div><span class="font-medium">MAC:</span> {{ user?.macAddress || 'No especificado' }}</div>
+        </div>
+        <div class="space-y-4">
+          <h3 class="text-lg font-bold text-blue-700 mb-2">Coordenadas GPS</h3>
+          <div>
+            <span class="font-medium">Latitud:</span> {{ user?.address?.coordinates?.lat || 'No especificado' }}<br>
+            <span class="font-medium">Longitud:</span> {{ user?.address?.coordinates?.lng || 'No especificado' }}
           </div>
         </div>
       </div>
     </div>
-    <!-- Estadísticas del perfil -->
-    <div class="bg-white rounded-lg shadow p-6">
-      <h3 class="text-lg font-medium text-gray-900 mb-4">Estadísticas del Perfil</h3>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="bg-blue-50 rounded-lg p-4 text-center">
-          <div class="text-2xl font-bold text-blue-600">{{ percentComplete }}%</div>
-          <div class="text-sm text-gray-600">Perfil Completado</div>
+
+    <!-- Estadísticas -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+      <div class="bg-blue-50 rounded-xl p-6 text-center shadow">
+        <div class="text-3xl font-bold text-blue-600 flex items-center justify-center gap-2">
+          <i class="fas fa-tasks"></i> {{ percentComplete }}%
         </div>
-        <div class="bg-green-50 rounded-lg p-4 text-center">
-          <div class="text-2xl font-bold text-green-600">{{ ('' + (user?.updatedAt ? (user?.updatedAt | date:'shortDate') : (user?.createdAt | date:'shortDate') || ('' + (user ? (user | json) : '')))) }}</div>
-          <div class="text-sm text-gray-600">Última Actualización</div>
+        <div class="text-sm text-gray-600 mt-2">Perfil Completado</div>
+      </div>
+      <div class="bg-green-50 rounded-xl p-6 text-center shadow">
+        <div class="text-2xl font-bold text-green-600">
+          {{ ('' + (user?.updatedAt ? (user?.updatedAt | date:'shortDate') : (user?.createdAt | date:'shortDate') || ('' + (user ? (user | json) : '')))) }}
         </div>
-        <div class="bg-purple-50 rounded-lg p-4 text-center">
-          <div *ngIf="status === 'active'" class="text-2xl font-bold text-green-600">Activo</div>
-          <div *ngIf="status === 'inactive'" class="text-2xl font-bold text-red-600">Inactivo</div>
-          <div class="text-sm text-gray-600">Estado del Perfil</div>
+        <div class="text-sm text-gray-600 mt-2">Última Actualización</div>
+      </div>
+      <div class="bg-purple-50 rounded-xl p-6 text-center shadow">
+        <div *ngIf="status === 'active'" class="text-2xl font-bold text-green-600 flex items-center justify-center gap-2">
+          <i class="fas fa-check-circle"></i> Activo
         </div>
+        <div *ngIf="status === 'inactive'" class="text-2xl font-bold text-red-600 flex items-center justify-center gap-2">
+          <i class="fas fa-times-circle"></i> Inactivo
+        </div>
+        <div class="text-sm text-gray-600 mt-2">Estado del Perfil</div>
       </div>
     </div>
-  </ng-container>
+  </div>
 </div>

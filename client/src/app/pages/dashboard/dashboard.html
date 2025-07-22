@@ -52,7 +52,7 @@
     </div>
     <ng-template #userView>
       <div class="max-w-4xl mx-auto">
-        <app-user-profile [user]="currentUser" [status]="userStatus"></app-user-profile>
+        <app-user-profile [user]="currentUser" [status]="safeUserStatus"></app-user-profile>
         <!-- Mostrar mapa si hay coordenadas -->
         <div class="mt-8" *ngIf="currentUser?.address?.coordinates?.lat && currentUser?.address?.coordinates?.lng">
           <app-user-map

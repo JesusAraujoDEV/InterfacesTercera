@@ -27,7 +27,10 @@ export class UserProfile {
 
   handleProfileUpdate(updatedUser: any) {
     this.isEditing = false;
-    // Aquí puedes emitir un evento o actualizar el usuario en el padre
+    this.user = updatedUser;
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+    }
   }
 
   handleCancel() {

@@ -1,1 +1,2 @@
-<router-outlet />
+<app-tangram-loading *ngIf="loading$ | async" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999"></app-tangram-loading>
+<router-outlet *ngIf="!(loading$ | async)"></router-outlet>

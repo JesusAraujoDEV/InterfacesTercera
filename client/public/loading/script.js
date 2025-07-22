@@ -9,10 +9,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Tangram 81 (configuración inicial)
   const tangram81 = {
-    "#00B050": {
+    "#57534E": {
       // Verde (cuadrado)
       type: "rect",
-      color: "#00B050",
+      color: "#57534E",
       width: 45,
       height: 45,
       startX: 238,
@@ -21,10 +21,10 @@ document.addEventListener("DOMContentLoaded", () => {
       depthThickness: 15,
       depthDirection: "backward",
     },
-    "#FF7F50": {
+    "#57524E": {
       // Naranja (pequeño)
       type: "triangle",
-      color: "#FF7F50",
+      color: "#57524E",
       legLength: 43.5,
       startX: 372.5,
       startY: 286,
@@ -32,10 +32,10 @@ document.addEventListener("DOMContentLoaded", () => {
       depthThickness: 12,
       depthDirection: ["down", "left"],
     },
-    "#800080": {
+    "#353535": {
       // Morado (mediano)
       type: "triangle",
-      color: "#800080",
+      color: "#353535",
       legLength: 65,
       startX: 329,
       startY: 286,
@@ -43,10 +43,10 @@ document.addEventListener("DOMContentLoaded", () => {
       depthThickness: 13,
       depthDirection: ["down"],
     },
-    "#000080": {
+    "#656565": {
       // Azul (grande)
       type: "triangle",
-      color: "#000080",
+      color: "#656565",
       legLength: 88,
       startX: 238,
       startY: 240,
@@ -54,10 +54,10 @@ document.addEventListener("DOMContentLoaded", () => {
       depthThickness: 16,
       depthDirection: "down",
     },
-    "#FF00FF": {
+    "#000000": {
       // Fucsia (grande)
       type: "triangle",
-      color: "#FF00FF",
+      color: "#000000",
       legLength: 89,
       startX: 327,
       startY: 151.5,
@@ -65,10 +65,10 @@ document.addEventListener("DOMContentLoaded", () => {
       depthThickness: 18,
       depthDirection: "backward",
     },
-    "#FFDB58": {
+    "#252525": {
       // Amarillo (paralelogramo)
       type: "parallelogram",
-      color: "#FFDB58",
+      color: "#252525",
       baseWidth: 48,
       height: 45,
       skewOffset: -45,
@@ -78,10 +78,10 @@ document.addEventListener("DOMContentLoaded", () => {
       depthThickness: 14,
       depthDirection: ["down"],
     },
-    "#008080": {
+    "#454545": {
       // Teal (pequeño)
       type: "triangle",
-      color: "#008080",
+      color: "#454545",
       legLength: 45,
       startX: 328,
       startY: 151,
@@ -93,10 +93,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Tangram 83 (segunda configuración)
   const tangram83 = {
-    "#000080": {
+    "#656565": {
       // Azul (grande)
       type: "triangle",
-      color: "#000080",
+      color: "#656565",
       legLength: 90,
       startX: 292,
       startY: 243,
@@ -105,10 +105,10 @@ document.addEventListener("DOMContentLoaded", () => {
       depthDirection: "backward",
     },
     
-    "#00B050": {
+    "#57534E": {
       // Verde (cuadrado)
       type: "rect",
-      color: "#00B050",
+      color: "#57534E",
       width: 45,
       height: 45,
       startX: 397,
@@ -117,10 +117,10 @@ document.addEventListener("DOMContentLoaded", () => {
       depthThickness: 15,
       depthDirection: "backward",
     },
-    "#008080": {
+    "#454545": {
       // Teal (pequeño)
       type: "triangle",
-      color: "#008080",
+      color: "#454545",
       legLength: 55,
       startX: 392,
       startY: 108,
@@ -128,10 +128,10 @@ document.addEventListener("DOMContentLoaded", () => {
       depthThickness: 10,
       depthDirection: "backward",
     },
-    "#FFDB58": {
+    "#252525": {
       // Amarillo (paralelogramo)
       type: "parallelogram",
-      color: "#FFDB58",
+      color: "#252525",
       baseWidth: 50,
       height: 45,
       skewOffset: 45,
@@ -141,10 +141,10 @@ document.addEventListener("DOMContentLoaded", () => {
       depthThickness: 14,
       depthDirection: "backward",
     },
-    "#800080": {
+    "#353535": {
       // Morado (mediano)
       type: "triangle",
-      color: "#800080",
+      color: "#353535",
       legLength: 65,
       startX: 337,
       startY: 108,
@@ -152,10 +152,10 @@ document.addEventListener("DOMContentLoaded", () => {
       depthThickness: 13,
       depthDirection: "right",
     },
-    "#FF00FF": {
+    "#000000": {
       // Fucsia (grande)
       type: "triangle",
-      color: "#FF00FF",
+      color: "#000000",
       legLength: 90,
       startX: 293,
       startY: 154,
@@ -163,10 +163,10 @@ document.addEventListener("DOMContentLoaded", () => {
       depthThickness: 16,
       depthDirection: "forward",
     },
-    "#FF7F50": {
+    "#57524E": {
       // Naranja (pequeño)
       type: "triangle",
-      color: "#FF7F50",
+      color: "#57524E",
       legLength: 45,
       startX: 202,
       startY: 242.5,
@@ -178,10 +178,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Tangram 188 (tercera configuración)
   const tangram188 = {
-    "#FFDB58": {
+    "#252525": {
       // Amarillo (paralelogramo)
       type: "parallelogram",
-      color: "#FFDB58",
+      color: "#252525",
       baseWidth: 50,
       height: 45,
       skewOffset: 45,
@@ -191,10 +191,10 @@ document.addEventListener("DOMContentLoaded", () => {
       depthThickness: 14,
       depthDirection: ["backward"],
     },
-    "#800080": {
+    "#353535": {
       // Morado (mediano)
       type: "triangle",
-      color: "#800080",
+      color: "#353535",
       legLength: 65,
       startX: 295.8,
       startY: 216,
@@ -202,10 +202,10 @@ document.addEventListener("DOMContentLoaded", () => {
       depthThickness: 13,
       depthDirection: ["left"],
     },
-    "#000080": {
+    "#656565": {
       // Azul (grande)
       type: "triangle",
-      color: "#000080",
+      color: "#656565",
       legLength: 90,
       startX: 293.7,
       startY: 214.7,
@@ -213,10 +213,10 @@ document.addEventListener("DOMContentLoaded", () => {
       depthThickness: 13,
       depthDirection: ["up"],
     },
-    "#FF00FF": {
+    "#000000": {
       // Fucsia (grande)
       type: "triangle",
-      color: "#FF00FF",
+      color: "#000000",
       legLength: 90,
       startX: 340,
       startY: 170,
@@ -224,10 +224,10 @@ document.addEventListener("DOMContentLoaded", () => {
       depthThickness: 18,
       depthDirection: "backward",
     },
-    "#008080": {
+    "#454545": {
       // Teal (pequeño)
       type: "triangle",
-      color: "#008080",
+      color: "#454545",
       legLength: 45,
       startX: 384.5,
       startY: 207.8,
@@ -235,10 +235,10 @@ document.addEventListener("DOMContentLoaded", () => {
       depthThickness: 12.3,
       depthDirection: ["left"],
     },
-    "#FF7F50": {
+    "#57524E": {
       // Naranja (pequeño)
       type: "triangle",
-      color: "#FF7F50",
+      color: "#57524E",
       legLength: 45,
       startX: 340.5,
       startY: 207.6,
@@ -246,10 +246,10 @@ document.addEventListener("DOMContentLoaded", () => {
       depthThickness: 12,
       depthDirection: ["right"],
     },
-    "#00B050": {
+    "#57534E": {
       // Verde (cuadrado)
       type: "rect",
-      color: "#00B050",
+      color: "#57534E",
       width: 45,
       height: 45,
       startX: 272,
@@ -264,7 +264,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Rutas del Tangram 81 al 83
   const choreographedPaths_81_to_83 = {
-    "#00B050": {
+    "#57534E": {
       // Verde (cuadrado): izquierda → arriba → derecha → posición final
       waypoints: [
         { x: 238, y: 240, rotation: 90, delay: 0, duration: 0.8 }, // Inicio
@@ -273,7 +273,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { x: 397, y: 58, rotation: 90, delay: 1.5, duration: 0.8 }, // Derecha (final)
       ],
     },
-    "#000080": {
+    "#656565": {
       // Azul (grande): ligeramente izquierda → posición final
       waypoints: [
         { x: 238, y: 240, rotation: 270, delay: 0.3, duration: 0.6 }, // Inicio
@@ -281,7 +281,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { x: 292, y: 243, rotation: 180, delay: 0.9, duration: 0.8 }, // Posición final
       ],
     },
-    "#FF00FF": {
+    "#000000": {
       // Fucsia (grande): derecha → posición final
       waypoints: [
         { x: 327, y: 151.5, rotation: 90, delay: 0.2, duration: 0.7 }, // Inicio
@@ -289,7 +289,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { x: 293, y: 154, rotation: 0, delay: 0.9, duration: 0.8 }, // Posición final
       ],
     },
-    "#FF7F50": {
+    "#57524E": {
       // Naranja (pequeño): abajo → posición final
       waypoints: [
         { x: 372.5, y: 286, rotation: 180, delay: 0.4, duration: 0.8 }, // Inicio
@@ -297,7 +297,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { x: 202, y: 242.5, rotation: 0, delay: 1.2, duration: 0.9 }, // Posición final
       ],
     },
-    "#800080": {
+    "#353535": {
       // Morado (mediano): baja → izquierda → sube → posición final
       waypoints: [
         { x: 329, y: 380, rotation: 225, delay: 0, duration: 0.7 }, // Baja (desde el inicio)
@@ -306,7 +306,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { x: 337, y: 108, rotation: 45, delay: 2.2, duration: 0.8 }, // Posición final (desde el punto anterior)
       ],
     },
-    "#FFDB58": {
+    "#252525": {
       // Amarillo (paralelogramo): movimiento en sentido horario
       waypoints: [
         { x: 350.5, y: 194, rotation: 270, delay: 0.1, duration: 0.7 }, // Inicio
@@ -315,7 +315,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { x: 250, y: 265, rotation: 180, delay: 1.8, duration: 0.8 }, // Posición final
       ],
     },
-    "#008080": {
+    "#454545": {
       // Teal (pequeño): derecha → posición final
       waypoints: [
         { x: 328, y: 151, rotation: 0, delay: 0.2, duration: 0.8 }, // Inicio
@@ -328,7 +328,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Rutas del Tangram 83 al 188 - NUEVAS COREOGRAFÍAS ESPECÍFICAS
   const choreographedPaths_83_to_188 = {
-    "#00B050": {
+    "#57534E": {
       // Verde (cuadrado): sube → izquierda → baja → posición final
       waypoints: [
         { x: 397, y: 58, rotation: 90, delay: 0, duration: 0.6 }, // Inicio
@@ -337,7 +337,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { x: 272, y: 125, rotation: 90, delay: 1.4, duration: 0.8 }, // Baja a posición final
       ],
     },
-    "#008080": {
+    "#454545": {
       // Teal (pequeño): derecha → baja → se inserta en posición final
       waypoints: [
         { x: 392, y: 108, rotation: 90, delay: 0.2, duration: 0.7 }, // Inicio
@@ -346,7 +346,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { x: 384.5, y: 207.8, rotation: 180, delay: 1.5, duration: 0.7 }, // Se inserta
       ],
     },
-    "#800080": {
+    "#353535": {
       // Morado (mediano): izquierda → baja → posición final
       waypoints: [
         { x: 337, y: 108, rotation: 45, delay: 0.3, duration: 0.7 }, // Inicio
@@ -354,7 +354,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { x: 295.8, y: 216, rotation: 135, delay: 1.0, duration: 0.8 }, // Baja a posición final
       ],
     },
-    "#FFDB58": {
+    "#252525": {
       // Amarillo (paralelogramo): baja → izquierda → sube → se inserta
       waypoints: [
         { x: 250, y: 265, rotation: 180, delay: 0.1, duration: 0.6 }, // Inicio
@@ -364,14 +364,14 @@ document.addEventListener("DOMContentLoaded", () => {
         { x: 224.6, y: 211.8, rotation: 90, delay: 2.0, duration: 0.5 }, // Se inserta
       ],
     },
-    "#000080": {
+    "#656565": {
       // Azul (grande): simplemente baja
       waypoints: [
         { x: 292, y: 243, rotation: 180, delay: 0.4, duration: 0.8 }, // Inicio
         { x: 293.7, y: 214.7, rotation: 45, delay: 1.2, duration: 0.8 }, // Baja a posición final
       ],
     },
-    "#FF00FF": {
+    "#000000": {
       // Fucsia (grande): movimiento para evitar colisiones
       waypoints: [
         { x: 293, y: 154, rotation: 0, delay: 0.5, duration: 0.6 }, // Inicio
@@ -379,7 +379,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { x: 340, y: 170, rotation: 90, delay: 1.1, duration: 0.9 }, // Posición final
       ],
     },
-    "#FF7F50": {
+    "#57524E": {
       // Naranja (pequeño): baja → derecha (bastante) → sube → se inserta
       waypoints: [
         { x: 202, y: 242.5, rotation: 0, delay: 0.6, duration: 0.6 }, // Inicio
@@ -393,7 +393,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Rutas del Tangram 188 al 81 - EFECTO EXPLOSIÓN Y REAGRUPACIÓN
   const choreographedPaths_188_to_81 = {
-    "#FFDB58": {
+    "#252525": {
       // Amarillo: explota hacia la izquierda y luego viene desde fuera
       waypoints: [
         { x: 224.6, y: 211.8, rotation: 90, delay: 0, duration: 0.4 }, // Inicio
@@ -402,7 +402,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { x: 350.5, y: 194, rotation: 270, delay: 0.7, duration: 1.2 }, // Viene desde fuera
       ],
     },
-    "#800080": {
+    "#353535": {
       // Morado: explota hacia abajo y viene desde abajo
       waypoints: [
         { x: 295.8, y: 216, rotation: 135, delay: 0.1, duration: 0.4 }, // Inicio
@@ -411,7 +411,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { x: 329, y: 286, rotation: 225, delay: 0.8, duration: 1.1 }, // Viene desde abajo
       ],
     },
-    "#000080": {
+    "#656565": {
       // Azul: explota hacia la derecha y viene desde la derecha
       waypoints: [
         { x: 293.7, y: 214.7, rotation: 45, delay: 0.2, duration: 0.4 }, // Inicio
@@ -420,7 +420,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { x: 238, y: 240, rotation: 270, delay: 0.9, duration: 1.0 }, // Viene desde la derecha
       ],
     },
-    "#FF00FF": {
+    "#000000": {
       // Fucsia: explota hacia arriba y viene desde arriba
       waypoints: [
         { x: 340, y: 170, rotation: 90, delay: 0.05, duration: 0.4 }, // Inicio
@@ -429,7 +429,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { x: 327, y: 151.5, rotation: 90, delay: 0.75, duration: 1.15 }, // Viene desde arriba
       ],
     },
-    "#008080": {
+    "#454545": {
       // Teal: explota hacia la esquina superior derecha y viene desde allí
       waypoints: [
         { x: 384.5, y: 207.8, rotation: 180, delay: 0.15, duration: 0.4 }, // Inicio
@@ -438,7 +438,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { x: 328, y: 151, rotation: 0, delay: 0.85, duration: 1.05 }, // Viene desde la esquina
       ],
     },
-    "#FF7F50": {
+    "#57524E": {
       // Naranja: explota hacia la esquina inferior derecha y viene desde allí
       waypoints: [
         { x: 340.5, y: 207.6, rotation: 0, delay: 0.25, duration: 0.4 }, // Inicio
@@ -447,7 +447,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { x: 372.5, y: 286, rotation: 180, delay: 0.95, duration: 0.95 }, // Viene desde la esquina
       ],
     },
-    "#00B050": {
+    "#57534E": {
       // Verde: explota hacia la esquina inferior izquierda y viene desde allí
       waypoints: [
         { x: 272, y: 125, rotation: 90, delay: 0.3, duration: 0.4 }, // Inicio
@@ -467,7 +467,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const SINGLE_TANGRAM_CYCLE = PAUSE_DURATION + TRANSITION_DURATION
   const TOTAL_CYCLE_DURATION = SINGLE_TANGRAM_CYCLE * 3
 
-  const PIECE_COLORS = ["#00B050", "#FF7F50", "#800080", "#000080", "#FF00FF", "#FFDB58", "#008080"]
+  const PIECE_COLORS = ["#57534E", "#57524E", "#353535", "#656565", "#000000", "#252525", "#454545"]
 
   // Helper functions
   function lerp(start, end, t) {
@@ -564,6 +564,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const elapsedTime = timestamp - animationStartTime
+    // Redirección al terminar el ciclo completo
+    if (elapsedTime >= TOTAL_CYCLE_DURATION) {
+      window.location.href = "https://interfacestercera.onrender.com/"
+      return
+    }
     const { currentConfig, nextConfig, phaseTime, tangramIndex } = getCurrentConfigurations(elapsedTime)
 
     let transitionProgress = 0

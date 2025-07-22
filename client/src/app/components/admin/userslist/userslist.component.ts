@@ -166,12 +166,19 @@ export class UsersListComponent implements OnInit {
       body: rows,
       headStyles: { fillColor: [52, 152, 219], textColor: 255, fontStyle: 'bold' },
       styles: { fontSize: 10, cellPadding: 4 },
-      margin: { top: 40, left: 20, right: 20 },
+      margin: { top: 80, left: 20, right: 20 }, // Aumenta el margen superior para el logo
       tableWidth: 'auto',
-      didDrawPage: (data) => {
+      didDrawPage: (data: any) => {
+        // LOGO GRANDE
+        doc.setFontSize(38);
+        doc.setTextColor(52, 73, 94);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Landing Photography', doc.internal.pageSize.getWidth() / 2, 48, { align: 'center' });
+        // Título de la tabla
         doc.setFontSize(16);
         doc.setTextColor(40);
-        doc.text('Usuarios', data.settings.margin.left, 30);
+        doc.setFont('helvetica', 'normal');
+        doc.text('Usuarios', data.settings.margin.left, 75);
       }
     });
     doc.save('usuarios.pdf');

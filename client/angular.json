@@ -70,7 +70,8 @@
               "buildTarget": "client:build:production"
             },
             "development": {
-              "buildTarget": "client:build:development"
+              "buildTarget": "client:build:development",
+              "port": 5173
             }
           },
           "defaultConfiguration": "development"

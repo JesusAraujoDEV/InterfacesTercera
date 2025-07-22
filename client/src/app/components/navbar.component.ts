@@ -19,39 +19,21 @@ import { CommonModule } from '@angular/common';
             <a href="#about" class="font-medium hover:underline" style="color: var(--color-text)">About</a>
             <a href="#portfolio" class="font-medium hover:underline" style="color: var(--color-text)">Portfolio</a>
             <a href="#contact-us" class="font-medium hover:underline" style="color: var(--color-text)">Contact us</a>
-            <a *ngIf="user && user.role === 'admin'" routerLink="/config" class="font-medium hover:underline" style="color: var(--color-primary)">Configuración</a>
-            <ng-container *ngIf="user; else loginLink">
-              <div class="relative flex items-center" #dropdownRef>
-                <button
-                  class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-stone-200 focus:outline-none"
-                  style="background: var(--color-neutral)"
-                  (click)="toggleDropdown()"
-                >
-                  <img src="/assets/icons/user (1).svg" alt="User" class="w-7 h-7" onerror="this.onerror=null;this.src='/placeholder.svg';" />
-                </button>
-                <span class="ml-2 font-medium max-w-[120px] truncate" style="color: var(--color-primary)">{{ user.firstName }}</span>
-                <div *ngIf="dropdownOpen" class="absolute right-0 top-full mt-2 w-40 bg-white rounded-md shadow-lg py-2 z-50 border" style="background: var(--color-secondary)">
-                  <button *ngIf="user.role === 'admin'"
-                    class="block w-full text-left px-4 py-2 hover:bg-stone-100"
-                    style="color: var(--color-primary)"
-                    (click)="viewAdmin()"
-                  >Ver usuarios</button>
-                  <button *ngIf="user.role !== 'admin'"
-                    class="block w-full text-left px-4 py-2 hover:bg-stone-100"
-                    style="color: var(--color-primary)"
-                    (click)="viewProfile()"
-                  >Ver perfil</button>
-                  <button
-                    class="block w-full text-left px-4 py-2 hover:bg-stone-100"
-                    style="color: var(--color-accent)"
-                    (click)="logout()"
-                  >Cerrar sesión</button>
-                </div>
+            <div class="relative flex items-center" #dropdownRef>
+              <button
+                class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-stone-200 focus:outline-none"
+                style="background: var(--color-neutral)"
+                (click)="toggleDropdown()"
+              >
+                <img src="/assets/icons/user (1).svg" alt="User" class="w-7 h-7" onerror="this.onerror=null;this.src='/placeholder.svg';" />
+              </button>
+              <span class="ml-2 font-medium max-w-[120px] truncate" style="color: var(--color-primary)">{{ user?.firstName || 'Invitado' }}</span>
+              <div *ngIf="dropdownOpen" class="absolute right-0 top-full mt-2 w-40 bg-white rounded-md shadow-lg py-2 z-50 border" style="background: var(--color-secondary)">
+                <button class="block w-full text-left px-4 py-2 hover:bg-stone-100" style="color: var(--color-primary)" (click)="viewAdmin()">Ver usuarios</button>
+                <button class="block w-full text-left px-4 py-2 hover:bg-stone-100" style="color: var(--color-primary)" (click)="viewProfile()">Ver perfil</button>
+                <button class="block w-full text-left px-4 py-2 hover:bg-stone-100" style="color: var(--color-accent)" (click)="logout()">Cerrar sesión</button>
               </div>
-            </ng-container>
-            <ng-template #loginLink>
-              <a routerLink="/login" class="px-4 py-2 rounded transition-colors" style="background: var(--color-primary); color: var(--color-secondary)">Login</a>
-            </ng-template>
+            </div>
           </div>
           <button (click)="toggleMenu()" class="md:hidden p-2 rounded-md text-stone-700 hover:text-stone-900">
             <i class="fas" [ngClass]="isOpen ? 'fa-times' : 'fa-bars'" style="font-size: 1.25rem;"></i>

@@ -36,7 +36,10 @@ export class Dashboard implements OnInit {
   }
 
   async fetchProfile() {
-    const token = localStorage.getItem('token');
+    let token: string | null = null;
+    if (typeof window !== 'undefined' && window.localStorage) {
+      token = localStorage.getItem('token');
+    }
     if (!token) {
       this.router.navigate(['/login']);
       return;
@@ -48,7 +51,9 @@ export class Dashboard implements OnInit {
       if (!res.ok) throw new Error('No autorizado');
       const data = await res.json();
       this.currentUser = data;
-      localStorage.setItem('user', JSON.stringify(data));
+      if (typeof window !== 'undefined' && window.localStorage) {
+        localStorage.setItem('user', JSON.stringify(data));
+      }
       await this.fetchStatus();
     } catch {
       this.router.navigate(['/login']);
@@ -60,7 +65,10 @@ export class Dashboard implements OnInit {
     this.statusLoading = true;
     this.statusError = null;
     try {
-      const token = localStorage.getItem('token');
+      let token: string | null = null;
+      if (typeof window !== 'undefined' && window.localStorage) {
+        token = localStorage.getItem('token');
+      }
       const res = await fetch(`${environment.BACKEND_URL}/api/block/status/${this.currentUser.id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -75,6 +83,7 @@ export class Dashboard implements OnInit {
   }
 
   get isAdminView(): boolean {
+    if (typeof window === 'undefined') return false;
     const params = new URLSearchParams(window.location.search);
     return this.currentUser?.role === 'admin' && params.get('view') === 'admin';
   }
@@ -85,5 +94,9 @@ export class Dashboard implements OnInit {
 
   onSelectUser(user: any) {
     this.selectedUser = user;
+  }
+
+  parseFloat(value: string): number {
+    return parseFloat(value);
   }
 }

@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-contact-section',
   standalone: true,
+  imports: [FormsModule],
   template: `
     <section id="contact-section" class="px-12 lg:px-32 py-16 relative" style="background: var(--color-secondary)">
       <h1 class="uppercase text-5xl mb-4 font-semibold" style="color: var(--color-primary)">Contact us</h1>
@@ -50,8 +52,6 @@ import { Component } from '@angular/core';
       <div class="h-44 w-44 md:h-52 md:w-52 rounded-full absolute -top-20 left-0 mt-16 -z-20" style="background: var(--color-neutral)"></div>
     </section>
   `,
-  imports: [],
-  standalone: true
 })
 export class ContactSection {
   formData = { email: '', message: '' };

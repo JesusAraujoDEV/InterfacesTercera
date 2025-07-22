@@ -1,0 +1,65 @@
+<div class="space-y-4">
+  <div class="flex items-center justify-between">
+    <h4 class="text-lg font-medium text-gray-900">Ubicación en el Mapa</h4>
+    <div class="flex items-center space-x-2 text-sm" [ngClass]="mapError ? 'text-red-500' : 'text-gray-500'">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path *ngIf="!mapError" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+        <path *ngIf="!mapError" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+        <path *ngIf="mapError" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span>{{ mapError ? 'Error al cargar mapa' : (isLoading ? 'Cargando...' : 'Mapa Interactivo') }}</span>
+    </div>
+  </div>
+
+  <div *ngIf="isUsingDefault && !mapError" class="bg-amber-50 border border-amber-200 rounded-lg p-3">
+    <div class="flex items-center">
+      <svg class="w-5 h-5 text-amber-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <p class="text-amber-800 text-sm">
+        <strong>Ubicación por defecto:</strong> No se encontraron coordenadas válidas para este usuario, mostrando Ciudad de México.
+      </p>
+    </div>
+  </div>
+
+  <div class="relative">
+    <div *ngIf="isLoading" class="absolute inset-0 bg-gray-100 rounded-lg flex items-center justify-center z-10">
+      <div class="text-center">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
+        <p class="text-gray-600 text-sm">Cargando mapa...</p>
+      </div>
+    </div>
+    <div #mapContainer class="w-full h-64 rounded-lg border border-gray-300 shadow-sm" style="min-height: 256px;"></div>
+    <div *ngIf="mapError" class="absolute inset-0 flex items-center justify-center bg-red-50 border border-red-300 rounded-lg">
+      <div class="text-center">
+        <svg class="w-12 h-12 text-red-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <p class="text-red-600 font-medium">No se pudo cargar el mapa</p>
+        <p class="text-red-500 text-sm">{{ mapError }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-gray-50 rounded-lg p-4">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+      <div>
+        <span class="font-medium text-gray-700">Usuario:</span>
+        <p class="text-gray-900">{{ userName }}</p>
+      </div>
+      <div>
+        <span class="font-medium text-gray-700">Latitud:</span>
+        <p class="text-gray-900">{{ validLat.toFixed(6) }}</p>
+      </div>
+      <div>
+        <span class="font-medium text-gray-700">Longitud:</span>
+        <p class="text-gray-900">{{ validLng.toFixed(6) }}</p>
+      </div>
+    </div>
+    <div *ngIf="isUsingDefault && !mapError" class="mt-2 pt-2 border-t border-gray-200">
+      <p class="text-xs text-gray-500">
+        💡 Las coordenadas originales eran: {{ latitude || 'N/A' }}, {{ longitude || 'N/A' }}
+      </p>
+    </div>
+  </div>
+</div>

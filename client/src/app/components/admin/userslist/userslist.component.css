@@ -1,0 +1,8 @@
+.bg-green-100 { background-color: #d1fae5 !important; }
+.text-green-800 { color: #065f46 !important; }
+.bg-red-100 { background-color: #fee2e2 !important; }
+.text-red-800 { color: #991b1b !important; }
+.bg-blue-600 { background-color: #2563eb !important; }
+.text-blue-600 { color: #2563eb !important; }
+.text-blue-900 { color: #1e3a8a !important; }
+.hover\:bg-blue-700:hover { background-color: #1d4ed8 !important; }

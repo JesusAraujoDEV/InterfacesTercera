@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-footer',
-  standalone: true,
   template: `
     <footer
       class="photography-footer"
@@ -49,7 +49,7 @@ import { Component } from '@angular/core';
           <address class="contact-info" style="font-style: normal; color: var(--color-text);">
             <div class="contact-item" style="display: flex; align-items: center; margin-bottom: 6px;"><i class="fas fa-map-marker-alt contact-icon" style="color: var(--color-neutral); margin-right: 8px;"></i><span style="color: var(--color-text);">123 Photography Street, Image City</span></div>
             <div class="contact-item" style="display: flex; align-items: center; margin-bottom: 6px;"><i class="fas fa-phone contact-icon" style="color: var(--color-neutral); margin-right: 8px;"></i><a href="tel:+1234567890" class="footer-link" style="color: var(--color-text); text-decoration: none;">+1 234 567 890</a></div>
-            <div class="contact-item" style="display: flex; align-items: center; margin-bottom: 6px;"><i class="fas fa-envelope contact-icon" style="color: var(--color-neutral); margin-right: 8px;"></i><a href="mailto:info@landingphotography.com" class="footer-link" style="color: var(--color-text); text-decoration: none;">info@landingphoto.com</a></div>
+            <div class="contact-item" style="display: flex; align-items: center; margin-bottom: 6px;"><i class="fas fa-envelope contact-icon" style="color: var(--color-neutral); margin-right: 8px;"></i><a href="mailto:info@landingphotography.com" class="footer-link" style="color: var(--color-text); text-decoration: none;">info&#64;landingphoto.com</a></div>
             <div class="contact-item" style="display: flex; align-items: center; margin-bottom: 6px;"><i class="fas fa-clock contact-icon" style="color: var(--color-neutral); margin-right: 8px;"></i><span style="color: var(--color-text);">Mon-Fri: 9:00 AM - 6:00 PM</span></div>
           </address>
           <div class="newsletter" style="margin-top: 1.5rem;">
@@ -89,8 +89,8 @@ import { Component } from '@angular/core';
       </div>
     </footer>
   `,
-  imports: [],
-  standalone: true
+  standalone: true,
+  imports: [FormsModule],
 })
 export class Footer {
   email = '';

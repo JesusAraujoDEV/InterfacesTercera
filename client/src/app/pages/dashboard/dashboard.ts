@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { TangramLoadingComponent } from '../../components/shared/tangram-loading/tangram-loading.component';
+import { HttpClientModule } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { FormsModule } from '@angular/forms';
 
@@ -18,7 +20,7 @@ export class UserMap { @Input() latitude: number = 0; @Input() longitude: number
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, UsersList, UserDetails, UserProfile, UserMap],
+  imports: [CommonModule, RouterModule, FormsModule, HttpClientModule, UsersList, UserDetails, UserProfile, UserMap, TangramLoadingComponent],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })

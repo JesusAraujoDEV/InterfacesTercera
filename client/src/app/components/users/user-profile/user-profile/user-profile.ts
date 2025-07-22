@@ -1,11 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProfileWizardExpanded } from '../../profile-wizard-expanded/profile-wizard-expanded/profile-wizard-expanded';
+import { TangramLoadingComponent } from '../../../shared/tangram-loading/tangram-loading.component';
 
 @Component({
   selector: 'app-user-profile',
   standalone: true,
-  imports: [CommonModule, ProfileWizardExpanded],
+  imports: [CommonModule, ProfileWizardExpanded, TangramLoadingComponent],
   templateUrl: './user-profile.html',
   styleUrl: './user-profile.css'
 })

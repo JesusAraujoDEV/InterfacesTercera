@@ -8,8 +8,10 @@
   />
 
   <!-- Vista de perfil -->
-  <ng-container *ngIf="!isEditing">
-    <div class="bg-white rounded-lg shadow">
+<ng-container *ngIf="!isEditing">
+    <!-- Loading tangram -->
+    <app-tangram-loading *ngIf="!user"></app-tangram-loading>
+    <div *ngIf="user" class="bg-white rounded-lg shadow">
       <div class="px-6 py-6 border-b border-gray-200">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div class="flex items-center space-x-4">
